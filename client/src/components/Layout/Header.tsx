@@ -1,5 +1,6 @@
 import { Calculator, Expand, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import misoLogoPath from "@assets/image_1748968725777.png";
 
 interface HeaderProps {
   onToggleFullscreen: () => void;
@@ -12,11 +13,11 @@ export default function Header({ onToggleFullscreen, isFullscreen }: HeaderProps
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-              <Calculator className="text-white text-lg" />
+            <div className="w-12 h-10 bg-white rounded-lg flex items-center justify-center p-1">
+              <img src={misoLogoPath} alt="Miso" className="h-full w-auto object-contain" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">통신사 통합 계산기 시스템</h1>
+              <h1 className="text-xl font-bold text-white">미소 결합할인 계산기</h1>
               <p className="text-sm text-gray-400">Premium Consultant Dashboard</p>
             </div>
           </div>
