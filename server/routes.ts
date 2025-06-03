@@ -24,7 +24,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const filename = telecom === 'template' ? 'smile_template.html' : `${telecom}.html`;
     const filePath = path.resolve(__dirname, 'original', filename);
     
-    console.log(`Serving calculator file: ${filePath}`);
+
     
     // Read the HTML file and inject back button
     fs.readFile(filePath, 'utf8', (err: any, data: string) => {
