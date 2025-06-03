@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useTelecomCalculator } from "@/hooks/useTelecomCalculator";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface ToolBarProps {
   comparisonMode: boolean;
@@ -20,6 +21,15 @@ export default function ToolBar({
   const [showFavorites, setShowFavorites] = useState(false);
   const [showRecent, setShowRecent] = useState(false);
 
+  const { data: preferences } = useQuery<{
+    recentTabs: string[];
+    favorites: string[];
+  }>({
+    queryKey: ["/api/preferences"],
+  });
+
+  const recentTabs = preferences?.recentTabs || [];
+
   const handleFavoriteClick = () => {
     setShowFavorites(!showFavorites);
     setShowRecent(false);
@@ -30,10 +40,24 @@ export default function ToolBar({
     setShowFavorites(false);
   };
 
-  const handleTabSelect = (tabId: string) => {
+  const handleTabSelect = async (tabId: string) => {
     setActiveTab(tabId);
     setShowFavorites(false);
     setShowRecent(false);
+
+    // Update recent tabs only if preferences exist
+    if (preferences) {
+      const newRecentTabs = [tabId, ...recentTabs.filter((id: string) => id !== tabId)].slice(0, 5);
+      
+      await fetch("/api/preferences", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...preferences,
+          recentTabs: newRecentTabs,
+        }),
+      });
+    }
   };
 
   return (
@@ -70,7 +94,7 @@ export default function ToolBar({
                   <div className="p-2">
                     <h3 className="text-sm font-medium text-gray-300 mb-2">즐겨찾기</h3>
                     {favorites.length > 0 ? (
-                      favorites.map((fav) => (
+                      favorites.map((fav: string) => (
                         <button
                           key={fav}
                           onClick={() => handleTabSelect(fav)}
@@ -102,12 +126,19 @@ export default function ToolBar({
                 <div className="absolute top-full left-0 mt-2 w-48 bg-gray-800 border border-gray-600 rounded-lg shadow-lg z-50">
                   <div className="p-2">
                     <h3 className="text-sm font-medium text-gray-300 mb-2">최근 사용</h3>
-                    <button
-                      onClick={() => handleTabSelect('kt')}
-                      className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded"
-                    >
-                      KT
-                    </button>
+                    {recentTabs.length > 0 ? (
+                      recentTabs.map((recent: string) => (
+                        <button
+                          key={recent}
+                          onClick={() => handleTabSelect(recent)}
+                          className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded"
+                        >
+                          {recent === 'template' ? '미소 템플릿 모음' : recent.toUpperCase()}
+                        </button>
+                      ))
+                    ) : (
+                      <p className="text-sm text-gray-500">최근 사용 내역이 없습니다</p>
+                    )}
                   </div>
                 </div>
               )}

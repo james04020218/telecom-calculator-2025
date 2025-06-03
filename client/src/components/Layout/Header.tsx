@@ -31,13 +31,6 @@ export default function Header({ onToggleFullscreen, isFullscreen }: HeaderProps
             >
               <Expand className="text-gray-300" />
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="glass-effect hover:bg-gray-600 transition-colors"
-            >
-              <Settings className="text-gray-300" />
-            </Button>
             <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-green-500 rounded-full flex items-center justify-center">
               <User className="text-white text-sm" />
             </div>
