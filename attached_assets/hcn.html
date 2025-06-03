@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKY/HCN 결합 할인 계산기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 
+        Application Structure Plan:
+        - New calculator for SKY/HCN based on KT calculator UI/UX.
+        - Provider selection (SKY/HCN) at the top.
+        - Dynamic population of Internet and TV plans based on provider.
+        - SKY: Differentiates standalone internet vs. internet bundled with TV. TV plans are add-ons. "30% discount (no gift)" option.
+        - HCN: Lists available internet. TV plans are add-ons. "동등결합 할인" for specific bundles.
+        - WiFi, Installation, Gift logic adapted for SKY/HCN.
+        - Removed KT-specific discount types, mobile inputs, and KT addons.
+        - Simplified message scripts.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .input-group { margin-bottom: 1.5rem; }
+        .input-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #334155; }
+        .input-field, .select-field { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; box-shadow: sm; }
+        .input-field:focus, .select-field:focus { border-color: #0ea5e9; outline: none; box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25); }
+        .input-field:disabled, .select-field:disabled { background-color: #e2e8f0; cursor: not-allowed; }
+        .btn-primary { background-color: #0ea5e9; color: white; padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-weight: 600; }
+        .btn-primary:hover { background-color: #0284c7; }
+        .btn-secondary { background-color: #64748b; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; }
+        .btn-secondary:hover { background-color: #475569; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #0369a1; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #38bdf8; }
+        .result-card { background-color: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); margin-bottom: 1.5rem; }
+        .result-label { color: #475569; }
+        .result-value { color: #1e293b; font-weight: 600;}
+        .total-value { color: #f59e0b; font-size: 1.5rem; font-weight: 700;}
+        .radio-label { margin-right: 1rem; margin-bottom: 0.5rem; display: inline-flex; align-items: center; cursor: pointer;}
+        .radio-input { margin-right: 0.5rem; accent-color: #0ea5e9; }
+        .summary-item { margin-bottom: 0.25rem; }
+        .message-script-area { width: 100%; min-height: 100px; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.875rem; white-space: pre-wrap; word-wrap: break-word; }
+        .copy-button-container { text-align: right; margin-top: 0.5rem; }
+        .copy-feedback { font-size: 0.75rem; color: green; margin-left: 0.5rem; }
+    </style>
+</head>
+<body class="text-slate-800">
+    <header class="bg-sky-700 text-white p-6 shadow-md">
+        <div class="container mx-auto max-w-4xl">
+            <h1 class="text-3xl font-bold text-center">SKY/HCN 결합 할인 계산기</h1>
+            <p class="text-center text-sky-200 mt-1">선택하신 상품의 예상 요금을 계산해 보세요.</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
+        <section id="providerSelectionSection" class="mb-8">
+            <h2 class="section-title">0. 통신사 선택</h2>
+            <div class="input-group">
+                <div class="flex items-center space-x-4">
+                    <label class="radio-label">
+                        <input type="radio" name="serviceProvider" value="sky" class="radio-input" checked>
+                        KT Skylife (SKY)
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="serviceProvider" value="hcn" class="radio-input">
+                        HCN (KT HCN)
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <section id="inputSection" class="mb-8">
+            <h2 class="section-title">1. 서비스 선택 (3년 약정 기준, VAT 포함)</h2>
+            
+            <div id="skyInternetTypeGroup" class="input-group">
+                <label class="input-label">SKY 인터넷 유형 선택</label>
+                <div class="flex items-center space-x-4">
+                    <label class="radio-label">
+                        <input type="radio" name="skyInternetType" value="bundle_tv" class="radio-input" checked>
+                        SKY 인터넷 + TV 번들
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="skyInternetType" value="standalone" class="radio-input">
+                        SKY 인터넷 단독
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="input-group">
+                    <label for="internetPlan" class="input-label">인터넷 요금제</label>
+                    <select id="internetPlan" class="select-field">
+                        </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="tvPlan" class="input-label">TV 상품</label>
+                    <select id="tvPlan" class="select-field">
+                        <option value="none">TV 선택 안함</option>
+                        </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="wifiRouter" class="input-label block mb-1">와이파이 공유기</label>
+                     <select id="wifiRouter" class="select-field">
+                        </select>
+                </div>
+                
+                <div id="skyGiftDiscountOptionGroup" class="input-group hidden">
+                     <label for="skyNoGiftDiscount" class="input-label flex items-center cursor-pointer">
+                        <input type="checkbox" id="skyNoGiftDiscount" class="radio-input h-5 w-5 mr-2">
+                        사은품 미선택 시 30% 할인 적용 (100M/200M 인터넷)
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <section id="installationSection" class="mb-8">
+            <h2 class="section-title">2. 설치 옵션</h2>
+            <div class="input-group bg-white p-6 rounded-lg shadow">
+                <label class="input-label">설치 희망 시점 (설치비 변동)</label>
+                <div class="space-y-2">
+                    <label class="radio-label"><input type="radio" name="installationTime" value="weekday" class="radio-input" checked> 평일 주간</label>
+                    <label class="radio-label"><input type="radio" name="installationTime" value="weekend" class="radio-input"> 주말/야간 (할증 적용)</label>
+                </div>
+            </div>
+        </section>
+
+        <div class="text-center mb-8">
+            <button id="calculateButton" class="btn-primary text-lg">예상 요금 계산하기</button>
+        </div>
+
+        <section id="resultSection" class="hidden">
+            <h2 class="section-title">📊 계산 결과</h2>
+            
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-sky-600 mb-3">요금 요약 (VAT 포함)</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="result-label summary-item">선택 통신사: <span id="selectedProviderDisplay" class="result-value"></span></p>
+                        <p class="result-label summary-item">선택 인터넷: <span id="selectedInternet" class="result-value"></span></p>
+                        <p class="result-label summary-item">선택 TV: <span id="selectedTv" class="result-value"></span></p>
+                    </div>
+                    <div>
+                        <p class="result-label summary-item">월 인터넷 기본료: <span id="totalBaseInternetCost" class="result-value">0</span> 원</p>
+                        <p class="result-label summary-item">월 TV 추가요금: <span id="tvAddonCostDisplay" class="result-value">0</span> 원</p>
+                        <p class="result-label summary-item">월 와이파이 공유기 임대료: <span id="wifiRouterRentalCostDisplay" class="result-value">0</span> 원</p>
+                        <p class="result-label text-green-600 summary-item">월 결합 할인액: <span id="totalDiscountAmount" class="result-value text-green-600">0</span> 원</p>
+                        <hr class="my-1 border-sky-300">
+                        <p class="mt-2 text-lg font-semibold">최종 예상 월 납부액: <span id="finalMonthlyCost" class="total-value">0</span> 원</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-sky-600 mb-3">🎁 사은품 혜택 (예상)</h3>
+                <p class="result-label summary-item">사은품: <span id="giftValue" class="result-value">0</span> 원</p>
+                <p id="giftNote" class="text-xs text-slate-500 mt-1"></p>
+            </div>
+
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-sky-600 mb-3">초기 설치 비용</h3>
+                <p class="result-label">예상 총 설치비: <span id="installationCostResult" class="result-value text-lg">0</span> 원</p>
+            </div>
+        </section>
+        
+        <section id="messageScriptSection" class="hidden mt-12">
+            <h2 class="section-title">📄 고객 안내 문자 스크립트 (상담원 참고용)</h2>
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-sky-600 mb-3">1. 상담 메모</h3>
+                <textarea id="memoScript" class="message-script-area" readonly></textarea>
+                <div class="copy-button-container">
+                    <button onclick="copyToClipboard('memoScript', 'copyFeedbackMemo')" class="btn-secondary text-xs">복사하기</button>
+                    <span id="copyFeedbackMemo" class="copy-feedback"></span>
+                </div>
+            </div>
+             <div class="result-card">
+                <h3 class="text-xl font-semibold text-sky-600 mb-3">2. 민감정보 전송용 링크 (고객 발송용)</h3>
+                <textarea id="sensitiveInfoLinkScriptSkyHcn" class="message-script-area" readonly></textarea>
+                <div class="copy-button-container">
+                    <button onclick="copyToClipboard('sensitiveInfoLinkScriptSkyHcn', 'copyFeedbackSensitiveInfoSkyHcn')" class="btn-secondary text-xs">복사하기</button>
+                    <span id="copyFeedbackSensitiveInfoSkyHcn" class="copy-feedback"></span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center p-6 mt-12 bg-sky-800 text-sky-200 text-sm">
+        <p>본 계산기는 미소에서 제공합니다.</p>
+        <p>&copy; 2024 SKY/HCN 결합 할인 계산기. 모든 정보는 참고용입니다.</p>
+    </footer>
+
+    <script>
+        const providerData = {
+          "kt_skylife": {
+            "service_provider": "KT Skylife (SKY)",
+            "currency": "KRW",
+            "general_notes": [
+              "모든 월 요금은 부가세 포함 가격일 수 있으며, 약정 조건에 따라 달라질 수 있습니다."
+            ],
+            "internet_plans": {
+              "standalone": [
+                { "speed": "100Mbps", "monthly_fee": 22000, "description": "SKY인터넷(단독) 100mb", "id": "sky_inet_s_100" },
+                { "speed": "200Mbps", "monthly_fee": 24200, "description": "SKY인터넷(단독) 200mb", "id": "sky_inet_s_200" },
+                { "speed": "500Mbps", "monthly_fee": 33000, "description": "SKY인터넷(단독) 500mb", "id": "sky_inet_s_500" },
+                { "speed": "1Gbps", "monthly_fee": 38500, "description": "SKY인터넷(단독) 1GB", "id": "sky_inet_s_1g" }
+              ],
+              "base_for_tv_bundle": [
+                { "speed": "100Mbps", "monthly_fee": 19800, "description": "SKY인터넷 100mb (TV 결합 시)", "id": "sky_inet_b_100" },
+                { "speed": "200Mbps", "monthly_fee": 22000, "description": "SKY인터넷 200mb (TV 결합 시)", "id": "sky_inet_b_200" },
+                { "speed": "500Mbps", "monthly_fee": 27500, "description": "SKY인터넷 500mb (TV 결합 시)", "id": "sky_inet_b_500" },
+                { "speed": "1Gbps", "monthly_fee": 33000, "description": "SKY인터넷 1G (TV 결합 시)", "id": "sky_inet_b_1g" }
+              ]
+            },
+            "tv_plan_add_on_fees_for_bundles": [
+              { "internet_speed_condition": "100Mbps", "tv_plan_name": "SKY ALL", "additional_monthly_fee_for_tv": 9900, "id": "sky_tv_all" },
+              { "internet_speed_condition": "100Mbps", "tv_plan_name": "SKY 포인트", "additional_monthly_fee_for_tv": 12100, "id": "sky_tv_point" },
+              { "internet_speed_condition": "200Mbps", "tv_plan_name": "SKY ALL", "additional_monthly_fee_for_tv": 9900, "id": "sky_tv_all" },
+              { "internet_speed_condition": "200Mbps", "tv_plan_name": "SKY 포인트", "additional_monthly_fee_for_tv": 12100, "id": "sky_tv_point" },
+              { "internet_speed_condition": "500Mbps", "tv_plan_name": "SKY ALL", "additional_monthly_fee_for_tv": 9900, "id": "sky_tv_all" },
+              { "internet_speed_condition": "500Mbps", "tv_plan_name": "SKY 포인트", "additional_monthly_fee_for_tv": 12100, "id": "sky_tv_point" },
+              { "internet_speed_condition": "1Gbps", "tv_plan_name": "SKY ALL", "additional_monthly_fee_for_tv": 9900, "id": "sky_tv_all" },
+              { "internet_speed_condition": "1Gbps", "tv_plan_name": "SKY 포인트", "additional_monthly_fee_for_tv": 12100, "id": "sky_tv_point" }
+            ],
+            "equipment": {
+              "wifi_router": [
+                { "condition": "100Mbps 인터넷 가입 시", "monthly_fee": 1100, "id": "sky_wifi_100" },
+                { "condition": "200Mbps 이상 인터넷 가입 시", "monthly_fee": 0, "notes": "무료 제공", "id": "sky_wifi_200plus" }
+              ]
+            },
+            "installation_fees": [
+              { "service_description": "인터넷 + TV 설치비", "fee": 36300, "timing": "weekday" },
+              { "service_description": "인터넷 + TV 설치비 (주말/야간)", "fee": 45375, "timing": "weekend" }
+            ],
+            "bundle_discounts": [
+              { "discount_name": "30% 할인 (사은품 미선택 시)", "internet_speed_condition": "100Mbps", "discount_amount": 8800, "notes": "100MB 상품 가입하고 사은품 미선택 시 적용되는 할인으로 보임" },
+              { "discount_name": "30% 할인 (사은품 미선택 시)", "internet_speed_condition": "200Mbps", "discount_amount": 8800, "notes": "200MB 상품 가입하고 사은품 미선택 시 적용되는 할인으로 보임" }
+            ],
+            "promotional_gifts": {
+              "internet_standalone": [
+                { "internet_speed": "100Mbps", "gift_value": 100000 },
+                { "internet_speed": "200Mbps", "gift_value": 120000 },
+                { "internet_speed": "500Mbps", "gift_value": 140000 },
+                { "internet_speed": "1Gbps", "gift_value": 150000 }
+              ],
+              "internet_tv_bundle": [
+                { "bundle_description": "Skylife 100Mbps 인터넷 + TV 결합", "gift_value": 350000, "internet_speed": "100Mbps" },
+                { "bundle_description": "Skylife 200Mbps 인터넷 + TV 결합", "gift_value": 360000, "internet_speed": "200Mbps" },
+                { "bundle_description": "Skylife 500Mbps 인터넷 + TV 결합", "gift_value": 420000, "internet_speed": "500Mbps" },
+                { "bundle_description": "Skylife 1Gbps 인터넷 + TV 결합", "gift_value": 450000, "internet_speed": "1Gbps" }
+              ]
+            }
+          },
+          "hcn": {
+            "service_provider": "HCN (KT HCN)",
+            "currency": "KRW",
+            "general_notes": [
+              "모든 월 요금은 부가세 포함 가격일 수 있으며, 약정 조건에 따라 달라질 수 있습니다."
+            ],
+            "internet_plans": [
+              { "speed": "100Mbps", "monthly_fee": 18398, "network_provider": "HCN 자체망 추정", "description": "HCN인터넷 100mb", "id":"hcn_inet_self_100"},
+              { "speed": "100Mbps", "monthly_fee": 13750, "network_provider": "SKY망", "description": "HCN인터넷 100mb (SKY망)", "id":"hcn_inet_sky_100" },
+              { "speed": "200Mbps", "monthly_fee": 15950, "network_provider": "SKY망", "description": "HCN인터넷 200mb (SKY망)", "id":"hcn_inet_sky_200" },
+              { "speed": "500Mbps", "monthly_fee": 27500, "network_provider": "SKY망", "description": "HCN인터넷 500mb (SKY망)", "id":"hcn_inet_sky_500" }
+            ],
+            "tv_plan_add_on_fees_for_bundles": [
+              { "bundle_name": "HCN 100M + UHD 골드 TV", "internet_condition": "HCN 100Mbps 인터넷 사용 시", "tv_plan_name": "UHD 골드 TV", "additional_monthly_fee_for_tv": 9900, "id": "hcn_tv_uhd_gold"},
+              { "bundle_name": "HCN 100M + 무약정 TV", "internet_condition": "HCN 100Mbps 인터넷 사용 시", "tv_plan_name": "무약정 TV", "additional_monthly_fee_for_tv": 7617, "notes": "셋탑박스 없음, 결합 할인 적용 불가 조건일 수 있음", "id": "hcn_tv_no_contract" }
+            ],
+            "equipment": {
+              "wifi_router": { "monthly_fee": 1100, "id":"hcn_wifi" }
+            },
+            "installation_fees": [
+              { "service_description": "인터넷 + TV 설치비", "fee": 33000, "timing": "weekday" }
+              // HCN 주말/야간 설치비 정보는 JSON에 없어 평일 기준으로만 처리. 필요시 추가 가능.
+            ],
+            "bundle_discounts": [
+              { "discount_name": "동등결합 할인", "bundle_condition": "HCN 100M + UHD 골드 TV 결합 시", "discount_amount": 1018 }
+            ],
+            "promotional_gifts": {
+              "internet_tv_bundle": [
+                { "bundle_description": "HCN 100M + UHD 골드 TV 결합", "gift_value": 150000, "internet_id_ref": "hcn_inet_self_100", "tv_id_ref": "hcn_tv_uhd_gold" },
+                { "bundle_description": "HCN 100M + 무약정 TV (셋탑없음, 결합불가) 결합", "gift_value": 120000, "internet_id_ref": "hcn_inet_self_100", "tv_id_ref": "hcn_tv_no_contract" }
+              ]
+            }
+          }
+        };
+
+        const providerRadios = document.querySelectorAll('input[name="serviceProvider"]');
+        const skyInternetTypeGroupEl = document.getElementById('skyInternetTypeGroup');
+        const skyInternetTypeRadios = document.querySelectorAll('input[name="skyInternetType"]');
+        const internetPlanEl = document.getElementById('internetPlan');
+        const tvPlanEl = document.getElementById('tvPlan');
+        const wifiRouterEl = document.getElementById('wifiRouter');
+        const skyNoGiftDiscountEl = document.getElementById('skyNoGiftDiscount');
+        const skyGiftDiscountOptionGroupEl = document.getElementById('skyGiftDiscountOptionGroup');
+        const installationTimeRadios = document.querySelectorAll('input[name="installationTime"]');
+        
+        const calculateButton = document.getElementById('calculateButton');
+        const resultSection = document.getElementById('resultSection');
+        const messageScriptSectionEl = document.getElementById('messageScriptSection');
+
+        // Result display elements
+        const selectedProviderDisplayEl = document.getElementById('selectedProviderDisplay');
+        const selectedInternetEl = document.getElementById('selectedInternet');
+        const selectedTvEl = document.getElementById('selectedTv');
+        const totalBaseInternetCostEl = document.getElementById('totalBaseInternetCost');
+        const tvAddonCostDisplayEl = document.getElementById('tvAddonCostDisplay');
+        const wifiRouterRentalCostDisplayEl = document.getElementById('wifiRouterRentalCostDisplay');
+        const totalDiscountAmountEl = document.getElementById('totalDiscountAmount');
+        const finalMonthlyCostEl = document.getElementById('finalMonthlyCost');
+        const giftValueEl = document.getElementById('giftValue');
+        const giftNoteEl = document.getElementById('giftNote');
+        const installationCostResultEl = document.getElementById('installationCostResult');
+        
+        const memoScriptEl = document.getElementById('memoScript');
+        const sensitiveInfoLinkScriptSkyHcnEl = document.getElementById('sensitiveInfoLinkScriptSkyHcn');
+
+
+        function getSelectedProviderData() {
+            const selectedProviderValue = document.querySelector('input[name="serviceProvider"]:checked').value;
+            return providerData[selectedProviderValue === 'sky' ? 'kt_skylife' : 'hcn'];
+        }
+
+        function populateInternetPlans() {
+            const data = getSelectedProviderData();
+            const selectedSkyInternetType = skyInternetTypeGroupEl.style.display !== 'none' ? document.querySelector('input[name="skyInternetType"]:checked').value : null;
+            internetPlanEl.innerHTML = '<option value="none">선택 안함</option>';
+
+            let plansToShow = [];
+            if (data.service_provider.includes("SKY")) {
+                if (selectedSkyInternetType === 'standalone') {
+                    plansToShow = data.internet_plans.standalone;
+                } else { // bundle_tv
+                    plansToShow = data.internet_plans.base_for_tv_bundle;
+                }
+            } else { // HCN
+                plansToShow = data.internet_plans;
+            }
+
+            plansToShow.forEach(plan => {
+                const option = document.createElement('option');
+                option.value = plan.id || plan.speed; // Use ID if available, otherwise speed
+                option.textContent = `${plan.description} (월 ${plan.monthly_fee.toLocaleString()}원)`;
+                option.dataset.price = plan.monthly_fee;
+                option.dataset.speed = plan.speed;
+                internetPlanEl.appendChild(option);
+            });
+            populateTvPlans(); // TV plans depend on internet
+            populateWifiOptions();
+        }
+
+        function populateTvPlans() {
+            const data = getSelectedProviderData();
+            tvPlanEl.innerHTML = '<option value="none">TV 선택 안함</option>';
+            if (!data.tv_plan_add_on_fees_for_bundles) return;
+
+            const selectedInternetOption = internetPlanEl.options[internetPlanEl.selectedIndex];
+            const selectedInternetSpeed = selectedInternetOption ? selectedInternetOption.dataset.speed : null;
+
+            const uniqueTvPlans = {};
+            data.tv_plan_add_on_fees_for_bundles.forEach(tvPlan => {
+                if (data.service_provider.includes("SKY")) { // SKY TV plans depend on internet speed
+                    if (selectedInternetSpeed && tvPlan.internet_speed_condition === selectedInternetSpeed) {
+                         if (!uniqueTvPlans[tvPlan.id]) {
+                            uniqueTvPlans[tvPlan.id] = tvPlan;
+                         }
+                    }
+                } else { // HCN TV plans might be simpler
+                     if (!uniqueTvPlans[tvPlan.id]) {
+                        uniqueTvPlans[tvPlan.id] = tvPlan;
+                     }
+                }
+            });
+
+            for(const id in uniqueTvPlans) {
+                const tvPlan = uniqueTvPlans[id];
+                const option = document.createElement('option');
+                option.value = tvPlan.id;
+                option.textContent = `${tvPlan.tv_plan_name} (월 ${tvPlan.additional_monthly_fee_for_tv.toLocaleString()}원 추가)`;
+                option.dataset.price = tvPlan.additional_monthly_fee_for_tv;
+                option.dataset.name = tvPlan.tv_plan_name;
+                tvPlanEl.appendChild(option);
+            }
+        }
+        
+        function populateWifiOptions() {
+            const data = getSelectedProviderData();
+            wifiRouterEl.innerHTML = ''; // Clear existing options
+
+            if (data.equipment && data.equipment.wifi_router) {
+                data.equipment.wifi_router.forEach(wifi => {
+                    const option = document.createElement('option');
+                    option.value = wifi.id || wifi.monthly_fee; // Use ID if available
+                    option.textContent = `${wifi.condition || data.service_provider + " 공유기"} (월 ${wifi.monthly_fee.toLocaleString()}원)${wifi.notes ? ' - ' + wifi.notes : ''}`;
+                    option.dataset.price = wifi.monthly_fee;
+                    wifiRouterEl.appendChild(option);
+                });
+            } else {
+                 const option = document.createElement('option');
+                 option.value = "0";
+                 option.textContent = "와이파이 정보 없음";
+                 option.dataset.price = "0";
+                 wifiRouterEl.appendChild(option);
+            }
+             handleWifiLogic(); // Apply logic after populating
+        }
+        
+        function handleWifiLogic() {
+            const data = getSelectedProviderData();
+            const selectedInternetOption = internetPlanEl.options[internetPlanEl.selectedIndex];
+            const selectedInternetSpeed = selectedInternetOption ? selectedInternetOption.dataset.speed : null;
+
+            if (data.service_provider.includes("SKY") && selectedInternetSpeed) {
+                const speedMbps = parseInt(selectedInternetSpeed.replace('Mbps','').replace('Gbps','000'));
+                if (speedMbps >= 200) {
+                    const freeWifiOption = Array.from(wifiRouterEl.options).find(opt => (parseFloat(opt.dataset.price) === 0 && opt.textContent.includes("200Mbps 이상")));
+                    if (freeWifiOption) {
+                        wifiRouterEl.value = freeWifiOption.value;
+                        wifiRouterEl.disabled = true;
+                    } else {
+                         wifiRouterEl.disabled = false;
+                    }
+                } else if (speedMbps === 100) {
+                     const paidWifiOption = Array.from(wifiRouterEl.options).find(opt => (parseFloat(opt.dataset.price) === 1100 && opt.textContent.includes("100Mbps")));
+                     if (paidWifiOption) {
+                        wifiRouterEl.value = paidWifiOption.value;
+                     }
+                     wifiRouterEl.disabled = false;
+                } else {
+                    wifiRouterEl.disabled = false;
+                }
+            } else if (data.service_provider.includes("HCN")) {
+                 // HCN has a fixed WiFi fee as per JSON
+                 const hcnWifiOption = Array.from(wifiRouterEl.options).find(opt => parseFloat(opt.dataset.price) === 1100);
+                 if (hcnWifiOption) {
+                    wifiRouterEl.value = hcnWifiOption.value;
+                 }
+                 wifiRouterEl.disabled = false; // HCN WiFi is generally not free based on speed in the provided JSON
+            } else {
+                 wifiRouterEl.disabled = false;
+            }
+        }
+
+
+        function handleProviderChange() {
+            const selectedProvider = document.querySelector('input[name="serviceProvider"]:checked').value;
+            if (selectedProvider === 'sky') {
+                skyInternetTypeGroupEl.style.display = 'block';
+                skyGiftDiscountOptionGroupEl.style.display = 'block'; // Show for SKY
+            } else { // hcn
+                skyInternetTypeGroupEl.style.display = 'none';
+                skyGiftDiscountOptionGroupEl.style.display = 'none'; // Hide for HCN
+            }
+            populateInternetPlans();
+            // Other UI updates based on provider if needed
+        }
+
+        providerRadios.forEach(radio => radio.addEventListener('change', handleProviderChange));
+        skyInternetTypeRadios.forEach(radio => radio.addEventListener('change', populateInternetPlans));
+        internetPlanEl.addEventListener('change', () => {
+            populateTvPlans();
+            handleWifiLogic();
+        });
+
+
+        function calculateAndDisplayResults() {
+            try {
+                const currentData = getSelectedProviderData();
+                const providerName = currentData.service_provider;
+
+                const internetOption = internetPlanEl.options[internetPlanEl.selectedIndex];
+                const tvOption = tvPlanEl.options[tvPlanEl.selectedIndex];
+                const wifiOption = wifiRouterEl.options[wifiRouterEl.selectedIndex];
+                const installationTimeValue = document.querySelector('input[name="installationTime"]:checked').value;
+                const isSkyNoGiftChecked = skyNoGiftDiscountEl.checked && providerName.includes("SKY");
+
+                let internetBaseFee = 0;
+                let internetSpeedForGiftAndDiscount = null;
+                if (internetOption && internetOption.value !== 'none') {
+                    internetBaseFee = parseFloat(internetOption.dataset.price) || 0;
+                    internetSpeedForGiftAndDiscount = internetOption.dataset.speed;
+                }
+
+                let tvAddonFee = 0;
+                let selectedTvPlanName = "TV 선택 안함";
+                if (tvOption && tvOption.value !== 'none') {
+                    tvAddonFee = parseFloat(tvOption.dataset.price) || 0;
+                    selectedTvPlanName = tvOption.dataset.name || "TV 상품";
+                }
+                
+                let wifiFee = 0;
+                if (wifiOption && wifiOption.value !== 'none'){
+                     wifiFee = parseFloat(wifiOption.dataset.price) || 0;
+                }
+                if (providerName.includes("SKY")) { // Re-apply SKY WiFi logic based on final internet speed
+                    if (internetSpeedForGiftAndDiscount) {
+                        const speedMbps = parseInt(internetSpeedForGiftAndDiscount.replace('Mbps','').replace('Gbps','000'));
+                        if (speedMbps >= 200) {
+                            wifiFee = 0; // Free for 200Mbps+
+                        } else if (speedMbps === 100) {
+                            wifiFee = 1100; // 1100 for 100Mbps
+                        }
+                    }
+                }
+
+
+                let totalDiscount = 0;
+                let giftValue = 0;
+                let giftNoteText = "";
+
+                if (providerName.includes("SKY")) {
+                    if (isSkyNoGiftChecked && (internetSpeedForGiftAndDiscount === "100Mbps" || internetSpeedForGiftAndDiscount === "200Mbps")) {
+                        const discountRule = currentData.bundle_discounts.find(d => d.internet_speed_condition === internetSpeedForGiftAndDiscount);
+                        if (discountRule) {
+                            totalDiscount = discountRule.discount_amount;
+                        }
+                        giftNoteText = "사은품 미선택 30% 할인 적용됨";
+                    } else {
+                        // Gift calculation for SKY
+                        const isBundle = document.querySelector('input[name="skyInternetType"]:checked').value === 'bundle_tv' && tvOption.value !== 'none';
+                        if (isBundle && currentData.promotional_gifts.internet_tv_bundle) {
+                            const giftRule = currentData.promotional_gifts.internet_tv_bundle.find(g => g.internet_speed === internetSpeedForGiftAndDiscount);
+                            if (giftRule) giftValue = giftRule.gift_value;
+                        } else if (currentData.promotional_gifts.internet_standalone) { // Standalone or TV not selected
+                            const giftRule = currentData.promotional_gifts.internet_standalone.find(g => g.internet_speed === internetSpeedForGiftAndDiscount);
+                            if (giftRule) giftValue = giftRule.gift_value;
+                        }
+                    }
+                } else { // HCN
+                    if (internetOption.value === "hcn_inet_self_100" && tvOption.value === "hcn_tv_uhd_gold" && currentData.bundle_discounts) {
+                        const hcnDiscount = currentData.bundle_discounts.find(d => d.discount_name === "동등결합 할인");
+                        if (hcnDiscount) totalDiscount = hcnDiscount.discount_amount;
+                    }
+                    // Gift calculation for HCN
+                    if (tvOption.value !== 'none' && currentData.promotional_gifts.internet_tv_bundle) {
+                         const giftRule = currentData.promotional_gifts.internet_tv_bundle.find(g => g.internet_id_ref === internetOption.value && g.tv_id_ref === tvOption.value);
+                         if(giftRule) giftValue = giftRule.gift_value;
+                    }
+                }
+
+
+                let installationFee = 0;
+                if (currentData.installation_fees) {
+                    const feeInfo = currentData.installation_fees.find(f => f.timing === installationTimeValue);
+                    if (feeInfo) {
+                        installationFee = feeInfo.fee;
+                    } else { // Fallback to weekday if weekend/night not specified for HCN
+                        const weekdayFee = currentData.installation_fees.find(f => f.timing === "weekday");
+                        if (weekdayFee) installationFee = weekdayFee.fee;
+                        else if (currentData.installation_fees.length > 0) installationFee = currentData.installation_fees[0].fee; // Fallback to first available
+                    }
+                }
+                
+                const totalBeforeDiscount = internetBaseFee + tvAddonFee + wifiFee;
+                const finalMonthlyFee = totalBeforeDiscount - totalDiscount;
+
+                // Display results
+                selectedProviderDisplayEl.textContent = providerName;
+                selectedInternetEl.textContent = internetOption.value !== 'none' ? internetOption.text.split(' (월')[0] : '미선택';
+                selectedTvEl.textContent = tvOption.value !== 'none' ? tvOption.dataset.name : '미선택';
+                
+                totalBaseInternetCostEl.textContent = internetBaseFee.toLocaleString();
+                tvAddonCostDisplayEl.textContent = tvAddonFee.toLocaleString();
+                wifiRouterRentalCostDisplayEl.textContent = wifiFee.toLocaleString();
+                totalDiscountAmountEl.textContent = totalDiscount.toLocaleString();
+                finalMonthlyCostEl.textContent = finalMonthlyFee.toLocaleString();
+
+                giftValueEl.textContent = giftValue.toLocaleString();
+                giftNoteEl.textContent = giftNoteText;
+                installationCostResultEl.textContent = installationFee.toLocaleString();
+
+                resultSection.classList.remove('hidden');
+                messageScriptSectionEl.classList.remove('hidden');
+                generateMessageScripts(providerName, internetOption.value !== 'none' ? internetOption.text.split(' (월')[0] : '미선택', tvOption.value !== 'none' ? tvOption.dataset.name : '미선택', wifiFee, finalMonthlyFee, giftValue, installationFee, installationTimeValue);
+
+            } catch (error) {
+                console.error("계산 중 오류 발생:", error);
+                alert("계산 중 오류가 발생했습니다. 입력 값을 확인하거나 잠시 후 다시 시도해주세요.");
+            }
+        }
+        
+        function generateMessageScripts(provider, internetText, tvText, wifiCost, finalFee, gift, installFee, installTimeText) {
+            const installTimeDisplay = installTimeText === 'weekday' ? '평일주간' : '주말/야간';
+            memoScriptEl.value = `[${provider} 미소 상담 메모]
+1. 상품 : ${internetText} + ${tvText === '미선택' ? 'TV 없음' : tvText} + 와이파이(월 ${wifiCost.toLocaleString()}원)
+2. 요금 : 월 ${finalFee.toLocaleString()}원
+3. 사은품 총액 : ${gift.toLocaleString()}원 (예상)
+4. 설치비 : ${installFee.toLocaleString()}원 (${installTimeDisplay})
+5. 기타 : 이사 여부 [ ] / 희망설치일자 [    년   월   일]`;
+
+            sensitiveInfoLinkScriptSkyHcnEl.value = `[${provider}] 아래링크에 고객님의 민감정보를 입력하시면 ${provider}로 고객님의 민감정보가 직접 전송됩니다
+https://miso.kr/booking/forms/secure-details?querystring=고객님 전화번호`;
+        }
+
+
+        function copyToClipboard(elementId, feedbackElementId) {
+            const textarea = document.getElementById(elementId);
+            if (!textarea) return; 
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); 
+            try {
+                document.execCommand('copy');
+                const feedbackEl = document.getElementById(feedbackElementId);
+                if (feedbackEl) feedbackEl.textContent = '복사되었습니다!';
+                setTimeout(() => { if (feedbackEl) feedbackEl.textContent = ''; }, 2000);
+            } catch (err) {
+                const feedbackEl = document.getElementById(feedbackElementId);
+                if (feedbackEl) feedbackEl.textContent = '복사 실패';
+                 setTimeout(() => { if (feedbackEl) feedbackEl.textContent = ''; }, 2000);
+            }
+            window.getSelection().removeAllRanges(); 
+        }
+        
+        function setInitialDefaults() {
+            handleProviderChange(); // This will call populateInternetPlans, which calls populateTvPlans & populateWifiOptions
+            
+            document.querySelector('input[name="installationTime"][value="weekday"]').checked = true;
+            if(skyNoGiftDiscountEl) skyNoGiftDiscountEl.checked = false;
+        }
+        
+        window.onload = setInitialDefaults;
+
+    </script>
+</body>
+</html>

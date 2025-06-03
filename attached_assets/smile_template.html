@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>미소 인터넷 고객 상담 문자 메시지 템플릿</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* Light gray background */
+        }
+        .template-card {
+            background-color: white;
+            border-radius: 0.75rem; /* 12px */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 1.5rem; /* 24px */
+            padding: 1.5rem; /* 24px */
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .template-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .template-text {
+            white-space: pre-wrap; /* Preserve whitespace and newlines */
+            background-color: #f3f4f6; /* Lighter gray for text background */
+            padding: 1rem; /* 16px */
+            border-radius: 0.5rem; /* 8px */
+            font-size: 0.875rem; /* 14px */
+            line-height: 1.5;
+            color: #374151; /* Dark gray text */
+            overflow-x: auto; /* Handle long lines if any */
+        }
+        .copy-button {
+            background-color: #3b82f6; /* Blue-500 */
+            color: white;
+            padding: 0.5rem 1rem; /* 8px 16px */
+            border-radius: 0.375rem; /* 6px */
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            margin-top: 1rem; /* 16px */
+        }
+        .copy-button:hover {
+            background-color: #2563eb; /* Blue-600 */
+        }
+        .copy-button.copied {
+            background-color: #10b981; /* Emerald-500 */
+        }
+        h1, h2, h3 {
+            color: #1f2937; /* Gray-800 */
+        }
+        .section-title {
+            margin-bottom: 1rem; /* 16px */
+            padding-bottom: 0.5rem; /* 8px */
+            border-bottom: 2px solid #e5e7eb; /* Gray-200 */
+        }
+        .subsection-title {
+            margin-top: 1.5rem; /* 24px */
+            margin-bottom: 0.75rem; /* 12px */
+            color: #4b5563; /* Gray-600 */
+        }
+        /* Custom scrollbar for template text area */
+        .template-text::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .template-text::-webkit-scrollbar-track {
+            background: #e5e7eb; /* Gray-200 */
+            border-radius: 0.5rem;
+        }
+        .template-text::-webkit-scrollbar-thumb {
+            background: #9ca3af; /* Gray-400 */
+            border-radius: 0.5rem;
+        }
+        .template-text::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* Gray-500 */
+        }
+        .card-info-item {
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="container mx-auto max-w-4xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold mb-2">미소 인터넷 고객 상담 문자 메시지 템플릿 모음</h1>
+            <p class="text-md sm:text-lg text-gray-600">이 페이지는 미소 인터넷 상담사님들이 고객 상황에 맞춰 활용할 수 있는 문자 메시지 템플릿을 모아놓은 곳입니다. 각 템플릿은 쉽게 복사하여 사용하실 수 있도록 제공됩니다.</p>
+        </header>
+
+        <main>
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold section-title">1. 초기 문의 및 연결 시도</h2>
+                
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">1.1. 최초 연결 시도 - 부재중 (부재 FU ❌)</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">템플릿 1: 기본 혜택 안내 (연결시도 - 부재 문자)</h4>
+                        <div id="template1-1-1" class="template-text">[미소] 인터넷 가입 혜택 안내 드립니다!
+안녕하세요, 고객님!인터넷 상담 요청 주셔서 연락드렸지만, 잠시 부재중이셔서 문자로 안내드립니다 😊지금 가입 시✅ 사은품 최대 47만원 +✅ 통신요금 결합 할인 혜택 가능해요!필요하신 정보만 간단하게 안내드릴 수 있어요.👉 편하신 상담 방법 알려주세요!
+📞 통화 원하시면 시간 남겨주시고
+📩 문자로 원하시면 ‘네’ 라고만 회신주셔도 바로 상담 도와드릴게요 :)
+부담 없이 편하게 연락주세요!
+지금 남겨주시면 가장 빠른 혜택 안내 도와드릴게요!
+감사합니다.미소 전담 상담사 김홍식 드림.</div>
+                        <button class="copy-button" data-target="template1-1-1">복사하기</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">템플릿 2: 맞춤 요금제 및 비교 안내 (첫 부재중)</h4>
+                        <div id="template1-1-2" class="template-text">[미소] 😊 안녕하세요, 고객님! 미소인터넷 상담사입니다. 인터넷 가입 특별 할인과 맞춤 요금제 안내차 연락드렸는데 부재중이셔서 문자 남겨요. 📞
+SK/KT/LG 꼼꼼 비교! 고객님께 딱 맞는 결합 상품으로 최대 현금 사은품 + 월 요금 대폭 절감 혜택을 찾아드립니다! 💰✨ 잠깐 상담으로 더 큰 만족을 얻으세요! 😉
+편하실 때 전화주시거나, 문자로 문의하셔도 좋습니다. 빠르고 친절하게 안내드릴게요. 고객님께 기분 좋은 미소를 드리는 미소인터넷! 😊 연락 기다리겠습니다.
+미소인터넷 상담사 드림 💕</div>
+                        <button class="copy-button" data-target="template1-1-2">복사하기</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">1.2. 이전 문의 고객 - 재연락</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">템플릿 1: 상담 재요청 (재연락 문자)</h4>
+                        <div id="template1-2-1" class="template-text">[미소] 인터넷 가입 상담
+안녕하세요, 고객님!
+이전 미소를 통해 인터넷 가입 상담 요청주시어 다시 연락드립니다.가입 시점 최대 혜택과 사용하시는 통신사에 따라 결합 안내 및 월요금 간단하게 상담 도와드리겠습니다.상담 가능하신 시간 말씀해주시면 연락드리겠습니다.문자로도 간단하게 상담 진행 가능하오니 편하게 연락주세요~감사합니다.운영시간 오전 8시 ~ 오후 10시까지</div>
+                        <button class="copy-button" data-target="template1-2-1">복사하기</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold section-title">2. 세일즈 진행 및 팔로우업</h2>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">2.1. 부재중 세일즈 팔로우업</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">2.1.1. 반복 부재 시 - 혜택 강조 (세일즈 FU 💰 / 세일즈 부재 FU 💰❌)</h4>
+                        <div id="template2-1-1" class="template-text">[미소] 😊 고객님, 안녕하세요! 미소인터넷 상담사입니다.
+혹시 계속 바쁘신가요? 😥 이전에 안내드렸던 인터넷 가입 특별 혜택 관련해서 다시 한번 연락드렸는데, 오늘도 연결이 어려워 문자 남깁니다. 📞
+고객님께 딱 맞는 맞춤 결합 할인으로 가장 합리적인 월 요금을 설계해 드리고, 숨어있는 할인과 최대 혜택까지 꼼꼼하게 챙겨드리고 싶어요! 🎁✨ 잠시만 시간 내주시면, 고객님께 꼭 맞는 플랜을 찾아드릴 수 있습니다.
+통화가 계속 어려우시면 부담 없이 문자로 궁금한 점이나 연락 편한 시간 알려주세요. 신속하고 친절하게 답변드리겠습니다. 😊
+고객님 통신비에 꼭 환한 미소를 더해드릴 수 있도록, 미소인터넷이 최선을 다하겠습니다! 연락 기다릴게요.
+미소인터넷 상담사 드림 💕</div>
+                        <button class="copy-button" data-target="template2-1-1">복사하기</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">2.1.2. 약속된 통화 부재 시 - 재안내 (세일즈 FU 💰💰 / 세일즈 부재 FU 💰❌💰❌)</h4>
+                        <div id="template2-1-2" class="template-text">[미소] 😊 안녕하세요, 미소인터넷 상담사 입니다.
+다시 통화드리기로 약속하셨어서 연락드렸어요. 그런데 지금은 바쁘신지 연결이 어려워 아쉬운 마음에 문자 남깁니다. 📞
+혹시 바쁘셔서 잠시 잊으셨을까 봐요! 안내드렸던 특별 월 요금 할인과 역대급 사은품 혜택🎁이 혹시라도 변경되기 전에 고객님께 꼭 확정해 드리고 싶거든요. 다시 한번 꼼꼼하게 챙겨드릴게요! ✨
+잠깐이라도 괜찮으실 때 편하게 전화 주시거나, 통화 괜찮으신 시간 알려주시면 제가 다시 연락드리겠습니다. 간단한 궁금증이나 다음 절차 안내는 문자로도 얼마든지 가능하니 부담 갖지 마시고 말씀해주세요! 😉
+미소인터넷은 고객님의 만족스러운 인터넷 시작을 처음부터 끝까지 기분 좋게 도와드리고 싶습니다! 😊 연락 기다리고 있겠습니다.
+오늘도 미소 가득한 하루 보내세요! 미소인터넷 상담사 드림 💕</div>
+                        <button class="copy-button" data-target="template2-1-2">복사하기</button>
+                    </div>
+                     <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">2.1.3. 약속된 통화 반복 부재 시 - 비교 제안 (세일즈 FU 💰💰💰 / 세일즈 부재 FU 💰❌💰❌💰❌)</h4>
+                        <div id="template2-1-3" class="template-text">[미소인터넷] 😊 안녕하세요, 고객님! 미소인터넷 상담사입니다. 다시 통화드리기로 약속하셨는데, 혹시 바쁘셨을까요? 연결이 어려워 아쉬운 마음에 문자 남겨드려요. 📞
+여러 곳 꼼꼼히 비교해보고 결정하시는 중이실 텐데, 현명한 선택 응원합니다! 👍 저희 미소인터넷을 포함해서 꼼꼼하게 살펴보시는 만큼, 가장 만족스러운 선택을 하시리라 믿어요.
+혹시 비교하시면서 저희가 안내드렸던 특별 월 요금 할인과 역대급 사은품 혜택🎁에 대해 다시 궁금한 점이 생기셨거나, 다른 곳 조건과 비교하며 더 자세히 확인하고 싶은 부분이 있으시다면 주저 마시고 언제든 편하게 문의해주세요! 고객님의 입장에서 한 번 더 명확하게 비교 설명해 드릴게요. ✨
+이 좋은 혜택이 혹시라도 변동되어 아쉬움 남지 않으시도록, 고객님께 꼭 챙겨드리고 싶은 마음이랍니다. 😊
+잠깐이라도 괜찮으실 때 편하게 전화 주시거나, 통화 괜찮으신 시간 알려주시면 제가 다시 연락드리겠습니다. 간단한 질문은 문자로도 얼마든지 환영입니다! 😉
+미소인터넷은 고객님께서 복잡한 비교 과정 없이도, 가장 기분 좋은 조건으로 인터넷을 시작하실 수 있도록 처음부터 끝까지 미소로 함께하겠습니다! 연락 기다릴게요.
+오늘도 미소 가득한 하루 보내세요! 미소인터넷</div>
+                        <button class="copy-button" data-target="template2-1-3">복사하기</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">2.2. 상품 제안 후 - 최종 결정 요청</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">템플릿 1: 최종 안내 및 결정 요청 (상품제안 후 - 부재 문자)</h4>
+                        <div id="template2-2-1" class="template-text">[미소] 인터넷 가입 혜택 관련 최종 안내드립니다!
+고객님께 안내드렸던 조건(통신사, 결합 여부, 월요금, 사은품 등)으로
+지금 가입 가능하신 상태입니다 😊
+혜택 적용 및 설치 일정 확정을 위해
+고객님의 최종 의사만 기다리고 있습니다.
+👉 간단히 ‘진행할게요’ 또는 ‘보류할게요’로만 회신 주셔도 괜찮습니다!
+📞 통화 원하시면 시간 남겨주셔도 됩니다.
+※ 현재 조건은 통신사 사은품 소진 또는 정책 변경 시 달라질 수 있습니다.
+희망하시는 설치일자에 설치받으시려면 빠른 접수가 필요합니다.
+희망 설치일자인 05-31에 진행하려면 회신주세요 :D.
+잠깐의 회신으로 가장 좋은 조건으로 마무리 도와드릴 수 있습니다.
+감사합니다.미소 전담 상담사 김홍식 드림.</div>
+                        <button class="copy-button" data-target="template2-2-1">복사하기</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold section-title">3. 가입 절차 안내 (접수 FU 📝)</h2>
+                
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">3.1. 통신사별 결합 방법 안내</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">3.1.1. SK 결합 방법 안내</h4>
+                        <div id="template3-1-1" class="template-text">[미소] SK 결합 방법 안내
+고객님, SK브로드밴드 인터넷 설치 후에 결합을 따로 진행해주셔야 합니다!
+■ SK 본사 고객센터 106번으로 전화하셔서 "인터넷과 (SKT 휴대폰/TV) 결합 신청합니다."라고 말씀해주세요.
+■ 결합 할인 적용 위해 꼭 잊지 말고 결합 신청해주세요!
+감사합니다.
+미소 전담 상담사 김홍식 드림.</div>
+                        <button class="copy-button" data-target="template3-1-1">복사하기</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">3.1.2. KT 결합 방법 안내</h4>
+                        <div id="template3-1-2" class="template-text">[미소] KT 결합 방법 안내
+고객님, KT 인터넷 설치 후에 결합을 따로 진행해주셔야 합니다!
+■ KT 본사 고객센터 100번으로 전화하셔서 "인터넷과 (KT 휴대폰/TV) 결합 신청합니다."라고 말씀해주세요.
+■ 결합 할인 적용 위해 꼭 잊지 말고 결합 신청해주세요!
+감사합니다.
+미소 전담 상담사 김홍식 드림.</div>
+                        <button class="copy-button" data-target="template3-1-2">복사하기</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">3.1.3. LG U+ 결합 방법 안내</h4>
+                        <div id="template3-1-3" class="template-text">[미소] LG U+ 결합 방법 안내
+고객님, LG U+ 인터넷 설치 후에 결합을 따로 진행해주셔야 합니다!
+■ LG U+ 본사 고객센터 101번으로 전화하셔서 "인터넷과 (LG U+ 휴대폰/TV) 결합 신청합니다."라고 말씀해주세요.
+■ 결합 할인 적용 위해 꼭 잊지 말고 결합 신청해주세요!
+감사합니다.
+미소 전담 상담사 김홍식 드림.</div>
+                        <button class="copy-button" data-target="template3-1-3">복사하기</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">3.2. KT 본인 인증 요청</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">템플릿 1</h4>
+                        <div id="template3-2-1" class="template-text">[KT 인터넷 가입 안내] 고객님, 안녕하세요. KT 인터넷 최종 신청을 위해 본인인증이 필요합니다. 잠시 후 고객님의 휴대폰 번호로 인증번호를 문자 발송해 드리겠습니다. 문자 받으시면 확인 후 인증번호를 저에게 알려주시면 감사하겠습니다. 문의사항 있으시면 언제든 편하게 연락주세요.</div>
+                        <button class="copy-button" data-target="template3-2-1">복사하기</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">3.3. LGU+ 본인 인증 요청</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">템플릿 1</h4>
+                        <div id="template3-3-1" class="template-text">[LG U+ 인터넷 가입 안내] 고객님, 안녕하세요. LG U+ 인터넷 가입 신청을 위해 본인인증이 필요합니다. 잠시 후 LG U+ 접수처(1800-XXXX 또는 1644-XXXX ) 번호로 고객님께 전화드릴 예정입니다. 전화 받으셔서 간단한 본인인증 절차를 진행해 주시면 감사하겠습니다. 혹시 통화가 어려우시거나 특정 시간대에 통화가 가능하시면 알려주세요. 해당 내용을 전달해 놓겠습니다.) 문의사항 있으시면 언제든 편하게 연락주세요.</div>
+                        <button class="copy-button" data-target="template3-3-1">복사하기</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">3.4. SKB 본인 인증 요청</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">템플릿 1</h4>
+                        <div id="template3-4-1" class="template-text">[SK브로드밴드 인터넷 가입 안내] 고객님, 안녕하세요. SK브로드밴드 인터넷 가입 신청을 위해 본인인증이 필요합니다. 잠시 후 SK브로드밴드 접수처(02-1644-XXXX)에서 고객님께 전화드릴 예정입니다. 해당 전화 꼭 받으셔서 인증 절차를 진행해 주시면 감사하겠습니다. 혹시 지금 통화가 어려우시거나 따로 인증 가능한 시간대가 있으시면 저에게 말씀해 주세요. 접수처에 해당 내용을 전달해 놓겠습니다. 문의사항 있으시면 언제든 편하게 연락주세요.</div>
+                        <button class="copy-button" data-target="template3-4-1">복사하기</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold section-title">4. 장기 미응답 고객 관리 (LOST FU 🚫)</h2>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">4.1. 일반 관심도 확인</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">템플릿 1</h4>
+                        <div id="template4-1-1" class="template-text">안녕하세요! 고객님께 미소와 행복을 드리는 미소 인터넷 😊 입니다.
+다름이 아니라, 이전에 문의주셨던 SK/KT/LG 인터넷 서비스 관련하여 안내차 연락드렸으나 혹시 바쁘셨을까요? 📞
+혹시 인터넷 설치 관련하여 아직 관심 있으시거나 다른 궁금한 점이 있으시다면, 주저 마시고 편하게 회신 또는 전화 부탁드립니다. 💖
+만약 이미 다른 곳에서 만족스럽게 해결되셨다면, 살짝 알려주시면 정말 감사하겠습니다! 🙏
+오늘도 활짝 웃는 😊 좋은 하루 보내시길 바랍니다! ✨</div>
+                        <button class="copy-button" data-target="template4-1-1">복사하기</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">4.2. 고민 중인 고객 대상 - 지원 및 정보 제공</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">템플릿 1</h4>
+                        <div id="template4-2-1" class="template-text">[미소인터넷] 😊 안녕하세요, 고객님! 미소인터넷 상담사입니다. 지난번 통화 때 인터넷 설치를 아직 고민 중이라고 말씀 주셨죠. 혹시 지금도 계속 생각 중이실까요? 중요한 결정이시니만큼 충분한 시간을 갖고 신중하게 선택하시는 것, 저희도 충분히 이해하고 존중합니다. 👍
+혹시 인터넷이 있으면 생활이 어떻게 달라질 수 있는지, 또는 어떤 경우에 인터넷이 정말 유용하게 활용될 수 있는지 등 아직 확신이 서지 않아 고민이시라면, 언제든 부담 갖지 마시고 저에게 편하게 말씀해주세요. 😊 고객님의 현재 상황과 필요에 맞춰 객관적인 정보로 함께 고민해 드릴 수 있답니다. (결정 강요나 부담은 전혀 없으니 안심하세요! 😉)
+만약 나중에라도 인터넷 설치를 고려하시게 된다면, 저희 미소인터넷이 고객님께 가장 편리하고 만족스러운 선택을 하실 수 있도록 좋은 정보와 맞춤 혜택으로 준비하고 기다리고 있겠습니다. ✨
+혹시 더 궁금한 점이나 생각 있으시면 언제든 편하게 전화 주시거나, 통화 괜찮으신 시간 알려주시면 제가 다시 연락드리겠습니다. 간단한 내용은 문자로도 편하게 문의주시고요!
+고객님의 모든 결정에 미소가 함께하시기를 바라며, 저희 미소인터넷은 언제나 열린 마음으로 고객님을 기다리겠습니다. 오늘도 편안한 하루 보내세요! 미소인터넷 드림 💕</div>
+                        <button class="copy-button" data-target="template4-2-1">복사하기</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold section-title">5. 추가 정보 및 링크</h2>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">5.1. 가용조회</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">헬로비전 가용조회</h4>
+                        <div id="additional-info-5-1-1" class="template-text">🌏 <a href="https://www.lghellovision.net/customer/area/joinAreaList.do" target="_blank" class="text-blue-600 hover:underline">헬로비전 가용조회 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-1-1" data-copy-type="link">링크 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">스카이라이프 가용조회</h4>
+                        <div id="additional-info-5-1-2" class="template-text">🌏 <a href="https://www.skylife.co.kr/product/combi/TPS" target="_blank" class="text-blue-600 hover:underline">스카이라이프 가용조회 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-1-2" data-copy-type="link">링크 복사</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">5.2. 편성표</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">SK 편성표</h4>
+                        <div id="additional-info-5-2-1" class="template-text">📻 <a href="https://www.bworld.co.kr/content/realtime/realtime_list.do?menu_id=P03030100&pack=B%EC%8A%A4%EB%A7%88%ED%8A%B8Plus" target="_blank" class="text-blue-600 hover:underline">SK 편성표 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-2-1" data-copy-type="link">링크 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">KT 편성표</h4>
+                        <div id="additional-info-5-2-2" class="template-text">📻 <a href="https://tv.kt.com/tv/channel/pChInfo.asp?_ga=2.34843432.844905408.1670213879-1568625152.1668496599&_gac=1.89683049.1670388992.Cj0KCQiA7bucBhCeARIsAIOwr-_BRcWopdUJG9KT3QnWeAuyjp4CFDp_7fzi-PagHbZMtEZneeuPtEoaAhc4EALw_wcB" target="_blank" class="text-blue-600 hover:underline">KT 편성표 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-2-2" data-copy-type="link">링크 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">LG 편성표</h4>
+                        <div id="additional-info-5-2-3" class="template-text">📻 <a href="https://www.lguplus.com/iptv/channel-guide" target="_blank" class="text-blue-600 hover:underline">LG 편성표 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-2-3" data-copy-type="link">링크 복사</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">5.3. 결합조회 방법</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">KT 결합조회 방법</h4>
+                        <div id="additional-info-5-3-1" class="template-text">♾️ KT 결합조회 방법
+KT → 마이 케이티 어플 → 왼쪽 하단 메뉴 → 요금/서비스 →
+결합 신청/변경 → 결합 내역 조회 → 이용중인 결합 상품 → 결합정보[총액 결합 할인 / 프리미엄 가족, 싱글 결합] → 패밀리 결합(결합 되어 있을 경우 패밀리 결합으로 안내)</div>
+                        <button class="copy-button" data-target="additional-info-5-3-1">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">SK 결합조회 방법</h4>
+                        <div id="additional-info-5-3-2" class="template-text">♾️ SK 결합조회 방법
+T world → 우측 하단 메뉴 → 우측 하단으로 내리시면 나의 가입 정보 → 나의 결합 상품
+= [온가족 무료] / [온가족 플랜] / [온가족 프리] / [요즘 가족 결합] → 패밀리 결합
+= [온가족 할인] → 요금 안내서 → 우측 상단 자물쇠 인증 → 인증번호 발송 → 인증 후 메뉴 → 내 가입 정보 → 나의 결합 상품 → 합산 기간 조회
+= 결합 없을 경우 → [요즘 가족 결합]</div>
+                        <button class="copy-button" data-target="additional-info-5-3-2">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">LG 결합조회 방법</h4>
+                        <div id="additional-info-5-3-3" class="template-text">♾️ LG 결합조회 방법
+당신의 유플러스(고객센터) → 우측 상단 메뉴 → 결합 할인 정보-결합 할인 조회
+= [가족 무한 사랑]/[한방에 YO]/[한방에 HOME] → [인터넷 가족끼리 모여](LG 패밀리, 5,500원 할인 적용, 모든 상품에 상관없이)
+= [참 쉬운 가족 결합] → 인터넷 3대까지 결합 가능해서 추가 결합
+= [투게더 결합] → 500메가 이상 급만 결합 가능, 인터넷 3대까지 결합 가능해서 추가 결합</div>
+                        <button class="copy-button" data-target="additional-info-5-3-3">내용 복사</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">5.4. 월 프로모션 링크 (매월 업데이트)</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">KT 프로모션</h4>
+                        <div id="additional-info-5-4-1" class="template-text">🎁 <a href="https://www.speedonline.kr/post/3712/read" target="_blank" class="text-blue-600 hover:underline">KT프로모션 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-4-1" data-copy-type="link">링크 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">LG 프로모션</h4>
+                        <div id="additional-info-5-4-2" class="template-text">🎁 <a href="https://www.speedonline.kr/post/3717/read" target="_blank" class="text-blue-600 hover:underline">LG프로모션 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-4-2" data-copy-type="link">링크 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">SK 프로모션</h4>
+                        <div id="additional-info-5-4-3" class="template-text">🎁 <a href="https://www.speedonline.kr/post/3713/read" target="_blank" class="text-blue-600 hover:underline">SK프로모션 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-4-3" data-copy-type="link">링크 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">헬로비전 프로모션</h4>
+                        <div id="additional-info-5-4-4" class="template-text">🎁 <a href="https://www.speedonline.kr/post/3715/read" target="_blank" class="text-blue-600 hover:underline">헬로비전프로모션 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-4-4" data-copy-type="link">링크 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">SKB 프로모션</h4>
+                        <div id="additional-info-5-4-5" class="template-text">🎁 <a href="https://www.speedonline.kr/post/3719/read" target="_blank" class="text-blue-600 hover:underline">SKB프로모션 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-4-5" data-copy-type="link">링크 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">스카이라이프 프로모션</h4>
+                        <div id="additional-info-5-4-6" class="template-text">🎁 <a href="https://www.speedonline.kr/post/3720/read" target="_blank" class="text-blue-600 hover:underline">스카이프로모션 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-4-6" data-copy-type="link">링크 복사</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">5.5. KT 인증코드 확인</h3>
+                    <div class="template-card">
+                        <h4 class="text-lg font-semibold mb-2">KT 인증코드 확인 방법</h4>
+                        <div id="additional-info-5-5-1" class="template-text"><a href="https://www.speedonline.kr/post/3649/read" target="_blank" class="text-blue-600 hover:underline">KT인증코드 확인 바로가기</a></div>
+                        <button class="copy-button" data-target="additional-info-5-5-1" data-copy-type="link">링크 복사</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold section-title">6. 팔로우업(FU) 코드 모음</h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="template-card">
+                        <div id="fu-code-1" class="template-text">부재 FU ❌</div>
+                        <button class="copy-button" data-target="fu-code-1">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <div id="fu-code-2" class="template-text">부재 FU ❌❌</div>
+                        <button class="copy-button" data-target="fu-code-2">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <div id="fu-code-3" class="template-text">부재 FU ❌❌❌</div>
+                        <button class="copy-button" data-target="fu-code-3">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <div id="fu-code-4" class="template-text">세일즈 FU 💰</div>
+                        <button class="copy-button" data-target="fu-code-4">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <div id="fu-code-5" class="template-text">세일즈 FU 💰💰</div>
+                        <button class="copy-button" data-target="fu-code-5">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <div id="fu-code-6" class="template-text">세일즈 FU 💰💰💰</div>
+                        <button class="copy-button" data-target="fu-code-6">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <div id="fu-code-7" class="template-text">LOST FU 🚫</div>
+                        <button class="copy-button" data-target="fu-code-7">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <div id="fu-code-8" class="template-text">접수 FU 📝</div>
+                        <button class="copy-button" data-target="fu-code-8">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <div id="fu-code-9" class="template-text">세일즈 부재 FU 💰❌</div>
+                        <button class="copy-button" data-target="fu-code-9">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <div id="fu-code-10" class="template-text">세일즈 부재 FU 💰❌💰❌</div>
+                        <button class="copy-button" data-target="fu-code-10">내용 복사</button>
+                    </div>
+                    <div class="template-card">
+                        <div id="fu-code-11" class="template-text">세일즈 부재 FU 💰❌💰❌💰❌</div>
+                        <button class="copy-button" data-target="fu-code-11">내용 복사</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-2xl font-semibold section-title">7. 제휴카드 할인 정보 (2025년 5월 기준)</h2>
+                <p class="text-sm text-gray-500 mb-4">(참고: 카드명: 전월 실적 / 할인액 순)</p>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">A. KT 제휴카드</h3>
+                    <div class="template-card">
+                        <div id="card-info-kt" class="template-text">
+                            <div class="card-info-item">우리카드: 40만원 / 22,000원</div>
+                            <div class="card-info-item">우리카드: 80만원 / 25,000원</div>
+                            <div class="card-info-item">롯데카드: 40만원 / 23,000원</div>
+                            <div class="card-info-item">롯데카드: 80만원 / 25,000원</div>
+                            <div class="card-info-item">삼성카드: 30만원 / 21,000원</div>
+                            <div class="card-info-item">삼성카드: 70만원 / 22,000원</div>
+                            <div class="card-info-item">삼성카드: 120만원 / 23,000원</div>
+                            <div class="card-info-item">현대카드: 50만원 / 25,000원</div>
+                            <div class="card-info-item">현대카드: 100만원 / 30,000원</div>
+                            <div class="card-info-item">현대카드: 150만원 / 40,000원</div>
+                            <div class="card-info-item">신한카드: 30만원 / 18,000원</div>
+                            <div class="card-info-item">BC바로카드: 30만원 / 15,000원</div>
+                            <div class="card-info-item">BC바로카드: 70만원 / 18,000원</div>
+                            <div class="card-info-item">NH농협카드: 40만원 / 14,000원</div>
+                            <div class="card-info-item">NH농협카드: 80만원 / 19,000원</div>
+                            <div class="card-info-item">하나카드: 30만원 / 10,000원</div>
+                            <div class="card-info-item">하나카드: 80만원 / 15,000원</div>
+                        </div>
+                        <button class="copy-button" data-target="card-info-kt">전체 내용 복사</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">B. LG U+ 제휴카드</h3>
+                    <div class="template-card">
+                        <div id="card-info-lgu" class="template-text">
+                            <div class="card-info-item">NH농협카드: 30만원 / 18,000원</div>
+                            <div class="card-info-item">NH농협카드: 70만원 / 24,000원</div>
+                            <div class="card-info-item">우리카드: 40만원 / 23,000원</div>
+                            <div class="card-info-item">우리카드: 80만원 / 25,000원</div>
+                            <div class="card-info-item">우리카드: 120만원 / 26,000원</div>
+                            <div class="card-info-item">현대카드: 50만원 / 26,000원</div>
+                            <div class="card-info-item">현대카드: 100만원 / 29,000원</div>
+                            <div class="card-info-item">롯데카드: 30만원 / 20,000원</div>
+                            <div class="card-info-item">롯데카드: 70만원 / 24,000원</div>
+                            <div class="card-info-item">롯데카드: 120만원 / 26,000원</div>
+                            <div class="card-info-item">삼성카드: 30만원 / 18,000원</div>
+                            <div class="card-info-item">삼성카드: 70만원 / 19,000원</div>
+                            <div class="card-info-item">삼성카드: 120만원 / 20,000원</div>
+                            <div class="card-info-item">하나카드: 30만원 / 10,000원</div>
+                            <div class="card-info-item">하나카드: 80만원 / 15,000원</div>
+                        </div>
+                        <button class="copy-button" data-target="card-info-lgu">전체 내용 복사</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">C. SK Broadband 제휴카드</h3>
+                    <div class="template-card">
+                        <div id="card-info-skb" class="template-text">
+                            <div class="card-info-item">삼성카드: 30만원 / 18,000원</div>
+                            <div class="card-info-item">삼성카드: 70만원 / 19,000원</div>
+                            <div class="card-info-item">삼성카드: 120만원 / 20,000원</div>
+                            <div class="card-info-item">롯데카드: 40만원 / 16,000원</div>
+                            <div class="card-info-item">롯데카드: 80만원 / 20,000원</div>
+                            <div class="card-info-item">현대카드: 50만원 / 25,000원</div>
+                            <div class="card-info-item">현대카드: 100만원 / 30,000원</div>
+                            <div class="card-info-item">KB국민카드: 30만원 / 12,000원</div>
+                            <div class="card-info-item">KB국민카드: 70만원 / 17,000원</div>
+                            <div class="card-info-item">하나카드: 25만원 / 10,000원</div>
+                            <div class="card-info-item">하나카드: 40만원 / 13,000원</div>
+                        </div>
+                        <button class="copy-button" data-target="card-info-skb">전체 내용 복사</button>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-medium subsection-title">D. SkyLife 제휴카드</h3>
+                    <div class="template-card">
+                        <div id="card-info-skylife" class="template-text">
+                            <div class="card-info-item">KB국민카드: 30만원 / 13,000원</div>
+                            <div class="card-info-item">KB국민카드: 70만원 / 17,000원</div>
+                            <div class="card-info-item">BC바로카드: 30만원 / 12,000원</div>
+                            <div class="card-info-item">BC바로카드: 70만원 / 17,000원</div>
+                            <div class="card-info-item">롯데카드: 30만원 / 13,000원</div>
+                            <div class="card-info-item">롯데카드: 70만원 / 15,000원</div>
+                            <div class="card-info-item">롯데카드: 150만원 / 25,000원</div>
+                            <div class="card-info-item">하나카드: 30만원 / 13,000원</div>
+                        </div>
+                        <button class="copy-button" data-target="card-info-skylife">전체 내용 복사</button>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-12 py-4 border-t border-gray-200">
+            <p class="text-sm text-gray-500">&copy; 미소 인터넷. 모든 권리 보유.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyButtons = document.querySelectorAll('.copy-button');
+
+            copyButtons.forEach(button => {
+                // 각 버튼의 초기 텍스트를 data 속성에 저장
+                button.dataset.originalText = button.textContent;
+
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    const textElement = document.getElementById(targetId);
+                    
+                    if (textElement) {
+                        let textToCopy = '';
+                        const copyType = button.dataset.copyType;
+
+                        if (copyType === 'link') {
+                            const linkTag = textElement.querySelector('a');
+                            if (linkTag && linkTag.href) {
+                                textToCopy = linkTag.href;
+                            } else {
+                                textToCopy = textElement.innerText || textElement.textContent;
+                            }
+                        } else {
+                            textToCopy = textElement.innerText || textElement.textContent;
+                        }
+                        
+                        const textArea = document.createElement('textarea');
+                        textArea.value = textToCopy;
+                        textArea.style.position = 'fixed';
+                        textArea.style.left = '-9999px';
+                        textArea.style.top = '-9999px';
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        try {
+                            document.execCommand('copy');
+                            button.textContent = '복사 완료!';
+                            button.classList.add('copied');
+                            
+                            setTimeout(() => {
+                                // 저장된 원래 텍스트로 복원
+                                button.textContent = button.dataset.originalText;
+                                button.classList.remove('copied');
+                            }, 2000);
+                        } catch (err) {
+                            console.error('텍스트 복사 실패:', err);
+                            button.textContent = '복사 실패';
+                             setTimeout(() => {
+                                // 저장된 원래 텍스트로 복원
+                                button.textContent = button.dataset.originalText;
+                            }, 2000);
+                        }
+                        document.body.removeChild(textArea);
+                    }
+                });
+
+                // 버튼 초기 텍스트 설정 (data-copy-type 및 ID 기반)
+                const targetId = button.dataset.target;
+                const textElement = document.getElementById(targetId);
+
+                if (button.dataset.copyType === 'link' && textElement && textElement.querySelector('a')) {
+                    button.textContent = '링크 복사';
+                } else if (targetId && targetId.startsWith('additional-info') && !(textElement && textElement.querySelector('a'))) {
+                     button.textContent = '내용 복사';
+                } else if (targetId && targetId.startsWith('fu-code-')) {
+                     button.textContent = '내용 복사';
+                } else if (targetId && targetId.startsWith('card-info-')) {
+                     button.textContent = '전체 내용 복사';
+                } else if (targetId && targetId.startsWith('template')) {
+                    button.textContent = '복사하기';
+                }
+                // 변경된 초기 텍스트를 다시 originalText에 저장
+                button.dataset.originalText = button.textContent;
+            });
+        });
+    </script>
+</body>
+</html>

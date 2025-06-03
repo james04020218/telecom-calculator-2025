@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark theme colors based on design reference */
+  --background: 218 22% 8%; /* #0f1419 - dark navy */
+  --foreground: 210 11% 98%; /* #f8fafc - light text */
+  --muted: 217 19% 11%; /* #1a1f2e - slate gray */
+  --muted-foreground: 215 13% 65%; /* #cbd5e1 - light gray */
+  --popover: 217 19% 11%; /* #1a1f2e */
+  --popover-foreground: 210 11% 98%; /* #f8fafc */
+  --card: 217 19% 11%; /* #1a1f2e - slate gray */
+  --card-foreground: 210 11% 98%; /* #f8fafc */
+  --border: 217 19% 17%; /* #2d3748 - mid gray */
+  --input: 217 19% 17%; /* #2d3748 */
+  --primary: 207 90% 54%; /* #0ea5e9 - main blue */
+  --primary-foreground: 211 100% 99%; /* #f8fafc */
+  --secondary: 217 19% 17%; /* #2d3748 */
+  --secondary-foreground: 210 11% 98%; /* #f8fafc */
+  --accent: 217 19% 17%; /* #2d3748 */
+  --accent-foreground: 210 11% 98%; /* #f8fafc */
+  --destructive: 0 84% 60%; /* #ef4444 */
+  --destructive-foreground: 210 11% 98%; /* #f8fafc */
+  --ring: 217 19% 17%; /* #2d3748 */
+  --radius: 0.5rem;
+  
+  /* Telecom brand colors */
+  --kt-red: 346 88% 51%; /* #e11d48 */
+  --lg-purple: 258 90% 66%; /* #8b5cf6 */
+  --sk-blue: 199 89% 48%; /* #0ea5e9 */
+  --hello-green: 156 72% 40%; /* #10b981 */
+  --sky-orange: 38 92% 50%; /* #f59e0b */
+  --template-indigo: 239 84% 67%; /* #6366f1 */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, hsl(218 22% 8%) 0%, hsl(217 19% 11%) 100%);
+    overflow-x: hidden;
+  }
+
+  .glass-effect {
+    background: rgba(26, 31, 46, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-tab {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-tab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-tab.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: currentColor;
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+
+  .glow-effect {
+    box-shadow: 0 0 20px currentColor;
+    opacity: 0.7;
+  }
+
+  .calculator-frame {
+    min-height: 800px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+  }
+
+  .skeleton-loader {
+    background: linear-gradient(90deg, hsl(217 19% 17%) 25%, hsl(215 25% 27%) 50%, hsl(217 19% 17%) 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+
+  @keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+  }
+
+  .floating-toolbar {
+    position: fixed;
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%);
+    z-index: 50;
+  }
+
+  @media (max-width: 768px) {
+    .floating-toolbar {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      top: auto;
+      transform: none;
+    }
+    
+    .comparison-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .ripple-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ripple-effect::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .ripple-effect:active::after {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(217 19% 17%);
+    border-radius: 0.5rem;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(215 13% 35%);
+    border-radius: 0.5rem;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(215 13% 45%);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

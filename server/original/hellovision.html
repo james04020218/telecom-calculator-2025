@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LG HelloVision 결합 할인 계산기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7fee7; /* lime-50 */ }
+        .input-group { margin-bottom: 1.5rem; }
+        .input-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #3f6212; /* lime-800 */ }
+        .input-field, .select-field { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #a3e635; /* lime-400 */ border-radius: 0.375rem; box-shadow: sm; transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
+        .input-field:focus, .select-field:focus { border-color: #65a30d; /* lime-600 */ outline: none; box-shadow: 0 0 0 0.2rem rgba(101, 163, 13, 0.25); }
+        .input-field:disabled, .select-field:disabled { background-color: #f0fdf4; /* green-50 */ cursor: not-allowed; opacity: 0.7; }
+        .btn-primary { background-color: #84cc16; /* lime-500 */ color: white; padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-weight: 600; transition: background-color 0.3s ease; }
+        .btn-primary:hover { background-color: #65a30d; /* lime-600 */ }
+        .btn-secondary { background-color: #6b7280; /* gray-500 */ color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; transition: background-color 0.3s ease; }
+        .btn-secondary:hover { background-color: #4b5563; /* gray-600 */ }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #4d7c0f; /* lime-700 */ margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #a3e635 /* lime-400 */;}
+        .result-card { background-color: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); margin-bottom: 1.5rem; }
+        .result-label { color: #374151; /* gray-700 */ }
+        .result-value { color: #1f2937; /* gray-800 */ font-weight: 600;}
+        .total-value { color: #65a30d; /* lime-600 */ font-size: 1.5rem; font-weight: 700;}
+        .mobile-line-item { border: 1px solid #d1d5db; /* gray-300 */ padding: 1rem; border-radius: 0.375rem; margin-bottom: 0.75rem; }
+        .radio-label { margin-right: 1rem; margin-bottom: 0.5rem; display: inline-flex; align-items: center; cursor: pointer;}
+        .radio-input { margin-right: 0.5rem; accent-color: #84cc16; /* lime-500 */ }
+        .toggle-switch { position: relative; display: inline-block; width: 40px; height: 20px; margin-left: 10px; vertical-align: middle;}
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px;}
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%;}
+        input:checked + .slider { background-color: #84cc16; /* lime-500 */ }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .discount-details { background-color: #ecfccb; /* lime-100 */ border: 1px solid #d9f99d; /* lime-300 */ padding: 0.75rem; border-radius: 0.375rem; font-size:0.875rem; }
+        .discount-details ul { padding-left: 1.25rem; list-style-type: disc; margin-left: 0.5rem;}
+        .discount-details ul ul { padding-left: 1rem; list-style-type: circle; }
+        .discount-details table { width: 100%; margin-bottom: 0.5rem; }
+        .discount-details th, .discount-details td { padding: 0.25rem 0.5rem; text-align: left; border: 1px solid #d9f99d; /* lime-200 */ }
+        .discount-details th { background-color: #f0fdf4; /* green-50 */ }
+        .summary-item { margin-bottom: 0.25rem; }
+        .message-script-area { width: 100%; min-height: 100px; padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.875rem; white-space: pre-wrap; word-wrap: break-word; }
+        .copy-button-container { text-align: right; margin-top: 0.5rem; }
+        .copy-feedback { font-size: 0.75rem; color: green; margin-left: 0.5rem; }
+    </style>
+</head>
+<body class="text-slate-800">
+    <header class="bg-lime-600 text-white p-6 shadow-md">
+        <div class="container mx-auto max-w-4xl">
+            <h1 class="text-3xl font-bold text-center">LG HelloVision 결합 할인 계산기</h1>
+            <p class="text-center text-lime-100 mt-1">선택하신 서비스와 할인 유형에 따른 예상 요금을 계산해 보세요.</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
+        <section id="inputSection" class="mb-8">
+            <h2 class="section-title">1. 서비스 선택 (약정 및 VAT 포함 기준)</h2>
+            <p class="mb-6 text-sm text-slate-600">아래 항목들을 선택해주세요. 요금은 LG헬로비전 표준 약정 기준입니다.</p>
+            
+            <div class="input-group">
+                <label class="input-label">인터넷 유형 선택</label>
+                <div class="flex items-center space-x-4">
+                    <label class="radio-label"><input type="radio" name="internetType" value="bundle" class="radio-input" checked> 인터넷 + TV 번들</label>
+                    <label class="radio-label"><input type="radio" name="internetType" value="standalone" class="radio-input"> 인터넷 단독</label>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="input-group">
+                    <label for="internetPlan" class="input-label">인터넷 요금제</label>
+                    <select id="internetPlan" class="select-field">
+                        <option value="none">선택 안함</option>
+                        {/* Options will be populated by JavaScript */}
+                    </select>
+                    <p class="text-xs text-slate-500 mt-1" id="internetNotes">참고: WiFi 공유기 무료 제공.</p>
+                </div>
+                
+                <div class="input-group">
+                    <label for="tvPlan" class="input-label">헬로tv 요금제 (1번째 TV)</label>
+                    <select id="tvPlan" class="select-field">
+                        <option value="none">선택 안함</option>
+                        {/* Options will be populated by JavaScript */}
+                    </select>
+                     <p class="text-xs text-slate-500 mt-1">참고: 셋톱박스 포함 요금입니다.</p>
+                </div>
+
+                <div class="input-group">
+                    <label for="additionalTvPlan" class="input-label">추가 헬로tv 선택 (2번째 TV)</label>
+                    <select id="additionalTvPlan" class="select-field">
+                        <option value="none">선택 안함</option>
+                        {/* Options will be populated by JavaScript */}
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group mt-6">
+                <label class="input-label">모바일 정보 (결합 할인에 영향)</label>
+                <div class="flex items-center mb-2">
+                     <label for="mobileCarrier" class="mr-2 text-sm text-slate-700">결합할 모바일 통신사:</label>
+                    <select id="mobileCarrier" class="select-field w-auto">
+                        <option value="none">선택 안함 (결합 없음)</option>
+                        <option value="SK">SKT</option>
+                        <option value="KT">KT</option>
+                        <option value="LG">LG U+</option>
+                        <option value="HelloMobile">헬로모바일 (알뜰폰)</option>
+                    </select>
+                </div>
+                 <p class="text-xs text-slate-500 mt-1">참고: 타사 모바일 또는 헬로모바일 결합 시 인터넷 요금 할인이 적용될 수 있습니다.</p>
+            </div>
+        </section>
+
+        <section id="discountTypeSection" class="mb-8">
+            <h2 class="section-title">2. 결합 할인 유형 선택 (참고용)</h2>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <p class="mb-4 text-sm text-slate-600">선택된 모바일 통신사에 따라 적용 가능한 결합 할인이 아래에 표시됩니다. (실제 할인은 위 모바일 통신사 선택에 따라 자동 계산)</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2">
+                    <div class="flex items-center">
+                        <label class="radio-label"><input type="radio" name="discountTypeDisplay" value="none" class="radio-input" checked disabled> 결합할인 없음</label>
+                    </div>
+                    <div class="flex items-center">
+                        <label class="radio-label"><input type="radio" name="discountTypeDisplay" value="mno_equivalent" class="radio-input" disabled> 타사 모바일 결합</label>
+                    </div>
+                     <div class="flex items-center">
+                        <label class="radio-label"><input type="radio" name="discountTypeDisplay" value="thrifty_bundle" class="radio-input" disabled> 알뜰폰 결합</label>
+                    </div>
+                </div>
+                <div id="bundleDetailsContainer" class="mt-3 hidden discount-details">
+                     <p class="font-semibold mb-1">선택된 결합 할인 상세:</p>
+                     <p>예상 인터넷 할인: <span id="detailBundleInternetDiscount" class="font-bold">0</span>원</p>
+                     <p class="text-xs mt-1" id="detailBundleDescription"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="installationSection" class="mb-8">
+            <h2 class="section-title">3. 설치 옵션</h2>
+            <div class="input-group bg-white p-6 rounded-lg shadow">
+                <label class="input-label">설치 희망 시점 (설치비 변동)</label>
+                <div class="space-y-2">
+                    <label class="radio-label"><input type="radio" name="installationTime" value="weekday" class="radio-input" checked> 평일 주간</label>
+                    <label class="radio-label"><input type="radio" name="installationTime" value="weekend" class="radio-input"> 주말/야간 (할증 적용)</label>
+                </div>
+            </div>
+        </section>
+
+        <div class="text-center mb-8">
+            <button id="calculateButton" class="btn-primary text-lg">예상 요금 계산하기</button>
+        </div>
+
+        <section id="resultSection" class="hidden">
+            <h2 class="section-title">📊 계산 결과</h2>
+            
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-lime-700 mb-3">요금 요약 (VAT 포함)</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="result-label summary-item">선택 인터넷: <span id="selectedInternet" class="result-value"></span></p>
+                        <p class="result-label summary-item">선택 헬로tv (1번째): <span id="selectedTv" class="result-value"></span></p>
+                        <p class="result-label summary-item">선택 추가 헬로tv (2번째): <span id="selectedAdditionalTv" class="result-value"></span></p>
+                        <p class="result-label summary-item">결합 모바일 통신사: <span id="selectedMobileCarrier" class="result-value"></span></p>
+                        <p class="result-label summary-item">적용 할인 유형: <span id="selectedDiscountTypeText" class="result-value"></span></p>
+                    </div>
+                    <div>
+                        <p class="result-label summary-item">월 인터넷 기본료 (유형 반영): <span id="totalBaseInternetCost" class="result-value">0</span> 원</p>
+                        <p class="result-label text-green-600 summary-item">월 총 인터넷 결합 할인액: <span id="totalInternetDiscountAmount" class="result-value text-green-600">0</span> 원</p>
+                        
+                        <div id="tvCostSummaryContainer" class="hidden"> 
+                            <hr class="my-1 border-slate-200">
+                            <p class="result-label summary-item">월 헬로tv 요금 (1번째): <span id="tvBaseCostDisplay" class="result-value">0</span> 원</p>
+                        </div>
+                         <div id="additionalTvCostSummaryContainer" class="hidden">
+                            <hr class="my-1 border-slate-200">
+                            <p class="result-label summary-item">월 추가 헬로tv 요금 (2번째): <span id="additionalTvCostDisplay" class="result-value">0</span> 원</p>
+                        </div>
+                        <hr class="my-1 border-lime-300">
+                        <p class="mt-2 text-lg font-semibold">최종 예상 월 납부액: <span id="finalMonthlyCost" class="total-value">0</span> 원</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-lime-700 mb-3">🎁 사은품 혜택 (예상 현금)</h3>
+                <p class="result-label summary-item">현금 사은품: <span id="giftCash" class="result-value">0</span> 원</p>
+                 <p class="text-xs text-lime-700 mt-1">* 사은품 정보는 변동될 수 있으니 가입 시점에 반드시 재확인 바랍니다.</p>
+            </div>
+
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-lime-700 mb-3">초기 설치 비용 (선택한 모든 유선 서비스 기준)</h3>
+                <p class="result-label">예상 총 설치비: <span id="installationCostResult" class="result-value text-lg">0</span> 원</p>
+                <p class="text-xs text-slate-500 mt-1">* 선택하신 설치 시점(평일/주말) 및 서비스 조합에 따라 계산됩니다.</p>
+            </div>
+            
+             <div class="result-card mt-6">
+                <h3 class="text-xl font-semibold text-lime-700 mb-2">추가 안내사항</h3>
+                <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                    <li>본 계산기는 제공된 LG헬로비전 상품 정보를 바탕으로 한 추정치입니다.</li>
+                    <li>실제 요금은 LG헬로비전의 최신 정책, 가입 시점의 프로모션, 추가 선택 사항에 따라 달라질 수 있습니다.</li>
+                    <li>약정 기간 내 해지 시 위약금(할인반환금 및 장비변상금)이 발생할 수 있습니다.</li>
+                    <li>더 정확한 정보는 LG헬로비전 고객센터(1855-1000)를 통해 확인하시기 바랍니다.</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="messageScriptSection" class="hidden mt-12">
+            <h2 class="section-title">📄 고객 안내 문자 스크립트 (상담원 참고용)</h2>
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-lime-700 mb-3">1. 전산 메모</h3>
+                <textarea id="memoScript" class="message-script-area" readonly></textarea>
+                <div class="copy-button-container">
+                    <button onclick="copyToClipboard('memoScript', 'copyFeedbackMemo')" class="btn-secondary text-xs">복사하기</button>
+                    <span id="copyFeedbackMemo" class="copy-feedback"></span>
+                </div>
+            </div>
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-lime-700 mb-3">2. 상품 안내 문자</h3>
+                <textarea id="infoScript" class="message-script-area" readonly></textarea>
+                 <div class="copy-button-container">
+                    <button onclick="copyToClipboard('infoScript', 'copyFeedbackInfo')" class="btn-secondary text-xs">복사하기</button>
+                    <span id="copyFeedbackInfo" class="copy-feedback"></span>
+                </div>
+            </div>
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-lime-700 mb-3">3. 가입 완료 문자</h3>
+                <textarea id="completeScript" class="message-script-area" readonly></textarea>
+                 <div class="copy-button-container">
+                    <button onclick="copyToClipboard('completeScript', 'copyFeedbackComplete')" class="btn-secondary text-xs">복사하기</button>
+                    <span id="copyFeedbackComplete" class="copy-feedback"></span>
+                </div>
+            </div>
+            <div class="result-card">
+                <h3 class="text-xl font-semibold text-lime-700 mb-3">4. 민감정보 전송용 링크 (고객 발송용)</h3>
+                <textarea id="sensitiveInfoLinkScript" class="message-script-area" readonly></textarea>
+                <div class="copy-button-container">
+                    <button onclick="copyToClipboard('sensitiveInfoLinkScript', 'copyFeedbackSensitiveLink')" class="btn-secondary text-xs">복사하기</button>
+                    <span id="copyFeedbackSensitiveLink" class="copy-feedback"></span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center p-6 mt-12 bg-lime-700 text-lime-100 text-sm">
+        <p>본 계산기는 LG HelloVision 판매점 미소에 제공합니다.</p>
+        <p>&copy; 2024 LG HelloVision 결합 할인 계산기. 모든 정보는 참고용입니다.</p>
+    </footer>
+
+    <script>
+        const lgHelloVisionData = {
+            "service_provider": "LG HelloVision",
+            "internet_plans": {
+                "standalone": [
+                    { "speed": "100Mbps", "monthly_fee": 20790, "description": "인터넷(단독) 100mb", "type": "100Mbps" },
+                    { "speed": "160Mbps", "monthly_fee": 25410, "description": "인터넷(단독) 160mb", "type": "160Mbps" },
+                    { "speed": "500Mbps", "monthly_fee": 29260, "description": "인터넷(단독) 500mb", "type": "500Mbps" },
+                    { "speed": "1Gbps", "monthly_fee": 30800, "description": "인터넷(단독) 1GB", "type": "1Gbps" }
+                ],
+                "when_bundled_with_tv": [
+                    { "speed": "100Mbps", "monthly_fee": 16330, "description": "인터넷 100mb (TV 결합 시)", "type": "100Mbps" },
+                    { "speed": "160Mbps", "monthly_fee": 19960, "description": "인터넷 160mb (TV 결합 시)", "type": "160Mbps" },
+                    { "speed": "500Mbps", "monthly_fee": 22990, "description": "인터넷 500mb (TV 결합 시)", "type": "500Mbps" },
+                    { "speed": "1Gbps", "monthly_fee": 24200, "description": "인터넷 1GB (TV 결합 시)", "type": "1Gbps" }
+                ]
+            },
+            "tv_plans": [
+                { "key": "economy_uhd", "plan_name": "이코노미 UHD", "channels": 111, "monthly_fee": 13200, "resolution": "UHD" },
+                { "key": "newbasic_uhd", "plan_name": "뉴베이직 UHD", "channels": 251, "monthly_fee": 15400, "resolution": "UHD" },
+                { "key": "prolite_uhd", "plan_name": "프로라이트 UHD", "channels": 218, "monthly_fee": 17600, "resolution": "UHD" },
+                { "key": "promax_uhd", "plan_name": "프로맥스 UHD", "channels": 246, "monthly_fee": 17600, "resolution": "UHD" }
+            ],
+            "additional_tv_fees": [
+                { "key": "add_economy_uhd", "plan_name_original": "이코노미 UHD", "monthly_fee": 5500, "description": "TV 추가 이코노미 UHD" },
+                { "key": "add_newbasic_hd", "plan_name_original": "뉴베이직 HD", "monthly_fee": 8800, "description": "TV 추가 뉴베이직 HD" },
+                { "key": "add_newbasic_uhd", "plan_name_original": "뉴베이직 UHD", "monthly_fee": 11000, "description": "TV 추가 뉴베이직 UHD" },
+                { "key": "add_prolite_uhd", "plan_name_original": "프로라이트 UHD", "monthly_fee": 11550, "description": "TV 추가 프로라이트 UHD" },
+                { "key": "add_promax_uhd", "plan_name_original": "프로맥스 UHD", "monthly_fee": 13750, "description": "TV 추가 프로맥스 UHD" }
+            ],
+            "promotional_gifts": [
+                { "condition_type": "인터넷 단독", "internet_speed": "100Mbps", "gift_value": 0 },
+                { "condition_type": "인터넷 단독", "internet_speed": "160Mbps", "gift_value": 130000 },
+                { "condition_type": "인터넷 단독", "internet_speed": "500Mbps", "gift_value": 180000 },
+                { "condition_type": "인터넷 단독", "internet_speed": "1Gbps", "gift_value": 200000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "100Mbps", "tv_plan_search_key": "이코노미 UHD", "gift_value": 230000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "160Mbps", "tv_plan_search_key": "이코노미 UHD", "gift_value": 300000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "500Mbps", "tv_plan_search_key": "이코노미 UHD", "gift_value": 350000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "1Gbps", "tv_plan_search_key": "이코노미 UHD", "gift_value": 400000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "100Mbps", "tv_plan_search_key": "뉴베이직 UHD", "gift_value": 230000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "160Mbps", "tv_plan_search_key": "뉴베이직 UHD", "gift_value": 300000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "500Mbps", "tv_plan_search_key": "뉴베이직 UHD", "gift_value": 350000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "1Gbps", "tv_plan_search_key": "뉴베이직 UHD", "gift_value": 400000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "160Mbps", "tv_plan_search_key": "프로라이트 UHD", "gift_value": 300000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "500Mbps", "tv_plan_search_key": "프로라이트 UHD", "gift_value": 350000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "1Gbps", "tv_plan_search_key": "프로라이트 UHD", "gift_value": 400000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "160Mbps", "tv_plan_search_key": "프로맥스 UHD", "gift_value": 300000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "500Mbps", "tv_plan_search_key": "프로맥스 UHD", "gift_value": 350000 },
+                { "condition_type": "인터넷 + TV 결합", "internet_speed": "1Gbps", "tv_plan_search_key": "프로맥스 UHD", "gift_value": 400000 }
+            ],
+            "bundle_discounts": {
+                "mno_equivalent_discounts": {
+                    "internet_standalone_discounts": [
+                        { "internet_speed": "100Mbps", "discount_amount": 4160 },
+                        { "internet_speed": "160Mbps", "discount_amount": 5090 },
+                        { "internet_speed": "500Mbps", "discount_amount": 5860 },
+                        { "internet_speed": "1Gbps", "discount_amount": 6160 }
+                    ],
+                    "internet_tv_bundle_discounts": [
+                        { "internet_speed": "100Mbps", "discount_amount": 4160, "condition": "프로라이트/맥스 TV 요금제와 결합 접수 불가" },
+                        { "internet_speed": "160Mbps", "discount_amount": 5080 },
+                        { "internet_speed": "500Mbps", "discount_amount": 5860 },
+                        { "internet_speed": "1Gbps", "discount_amount": 6160 }
+                    ]
+                },
+                "thrifty_bundle_discount": { "discount_amount": 2200 }
+            },
+            "installation_fees": [
+                { "service_type": "인터넷 단독 설치", "fee": 36300, "key": "internet_only" },
+                { "service_type": "인터넷 + TV 설치", "fee": 56100, "key": "internet_with_tv" }
+            ]
+        };
+        
+        // DOM Element Variables
+        let internetTypeRadios, internetPlanEl, tvPlanEl, additionalTvPlanEl, mobileCarrierEl,
+            discountTypeDisplayRadios, bundleDetailsContainerEl, detailBundleInternetDiscountEl, detailBundleDescriptionEl,
+            calculateButton, resultSection,
+            selectedInternetEl, selectedTvEl, selectedAdditionalTvEl, selectedMobileCarrierDisplayEl, selectedDiscountTypeEl,
+            totalBaseInternetCostEl, totalInternetDiscountAmountEl,
+            tvCostSummaryContainerEl, tvBaseCostDisplayEl,
+            additionalTvCostSummaryContainerEl, additionalTvCostDisplayEl,
+            finalMonthlyCostEl, installationCostResultEl, giftCashEl,
+            messageScriptSectionEl, memoScriptEl, infoScriptEl, completeScriptEl, sensitiveInfoLinkScriptEl,
+            internetNotesEl;
+
+
+        function assignDOMElements() {
+            internetTypeRadios = document.querySelectorAll('input[name="internetType"]');
+            internetPlanEl = document.getElementById('internetPlan');
+            tvPlanEl = document.getElementById('tvPlan');
+            additionalTvPlanEl = document.getElementById('additionalTvPlan');
+            mobileCarrierEl = document.getElementById('mobileCarrier'); 
+
+            discountTypeDisplayRadios = document.querySelectorAll('input[name="discountTypeDisplay"]');
+            bundleDetailsContainerEl = document.getElementById('bundleDetailsContainer');
+            detailBundleInternetDiscountEl = document.getElementById('detailBundleInternetDiscount');
+            detailBundleDescriptionEl = document.getElementById('detailBundleDescription');
+
+            calculateButton = document.getElementById('calculateButton');
+            resultSection = document.getElementById('resultSection');
+            
+            selectedInternetEl = document.getElementById('selectedInternet');
+            selectedTvEl = document.getElementById('selectedTv');
+            selectedAdditionalTvEl = document.getElementById('selectedAdditionalTv');
+            selectedMobileCarrierDisplayEl = document.getElementById('selectedMobileCarrier'); 
+            selectedDiscountTypeEl = document.getElementById('selectedDiscountTypeText'); // Corrected ID
+            
+            totalBaseInternetCostEl = document.getElementById('totalBaseInternetCost');
+            totalInternetDiscountAmountEl = document.getElementById('totalInternetDiscountAmount');
+            
+            tvCostSummaryContainerEl = document.getElementById('tvCostSummaryContainer');
+            tvBaseCostDisplayEl = document.getElementById('tvBaseCostDisplay');
+
+            additionalTvCostSummaryContainerEl = document.getElementById('additionalTvCostSummaryContainer');
+            additionalTvCostDisplayEl = document.getElementById('additionalTvCostDisplay');
+
+            finalMonthlyCostEl = document.getElementById('finalMonthlyCost');
+            installationCostResultEl = document.getElementById('installationCostResult');
+            giftCashEl = document.getElementById('giftCash');
+
+            messageScriptSectionEl = document.getElementById('messageScriptSection');
+            memoScriptEl = document.getElementById('memoScript');
+            infoScriptEl = document.getElementById('infoScript');
+            completeScriptEl = document.getElementById('completeScript');
+            sensitiveInfoLinkScriptEl = document.getElementById('sensitiveInfoLinkScript');
+            internetNotesEl = document.getElementById('internetNotes');
+        }
+
+
+        function populateSelectWithOptionsGeneric(selectElement, dataArray, defaultKey = "none", nameKey = "plan_name", priceKey = "monthly_fee", keyProperty = "key") {
+            const currentValue = selectElement.value;
+            selectElement.innerHTML = `<option value="none">선택 안함</option>`;
+            dataArray.forEach((item, index) => {
+                const option = document.createElement('option');
+                const itemKeyValue = item[keyProperty] || item[nameKey] || `item_${index}`; 
+                option.value = itemKeyValue;
+
+                let textContent = `${item[nameKey] || item.description || item.service_type}`;
+                if (item[priceKey] !== undefined && item[priceKey] !== null && item[priceKey] !== 0) {
+                     textContent += ` (월 ${item[priceKey].toLocaleString()}원)`;
+                }
+                if (item.channels) { 
+                    textContent = `${item[nameKey]} (${item.channels}채널, 월 ${item[priceKey].toLocaleString()}원)`;
+                } else if (item.description && selectElement.id === 'internetPlan') { 
+                     textContent = `${item.description} (월 ${item[priceKey].toLocaleString()}원)`;
+                } else if (item.description && selectElement.id === 'additionalTvPlan') {
+                     textContent = `${item.description} (월 ${item[priceKey].toLocaleString()}원)`;
+                }
+
+                option.textContent = textContent;
+                if (item[priceKey] !== undefined) option.dataset.price = item[priceKey];
+                if (item.speed) option.dataset.speed = item.speed; 
+                if (item.type) option.dataset.type = item.type;   
+                if (item.channels) option.dataset.channels = item.channels;
+                if (item.resolution) option.dataset.resolution = item.resolution;
+                
+                selectElement.appendChild(option);
+            });
+
+            if (selectElement.querySelector(`option[value="${currentValue}"]`)) {
+                selectElement.value = currentValue;
+            } else if (defaultKey !== "none" && selectElement.querySelector(`option[value="${defaultKey}"]`)) {
+                selectElement.value = defaultKey;
+            } else if (defaultKey === "none" && selectElement.options.length > 0) {
+                selectElement.value = "none";
+            }
+        }
+        
+        function populateInternetPlansHello(isBundle) {
+            const currentInternetPlanKey = internetPlanEl.value;
+            internetPlanEl.innerHTML = `<option value="none">선택 안함</option>`;
+            const plansSource = isBundle ? lgHelloVisionData.internet_plans.when_bundled_with_tv : lgHelloVisionData.internet_plans.standalone;
+            
+            plansSource.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.type; 
+                option.textContent = `${item.description} (월 ${item.monthly_fee.toLocaleString()}원)`;
+                option.dataset.price = item.monthly_fee;
+                option.dataset.speed = item.speed; 
+                option.dataset.type = item.type;   
+                internetPlanEl.appendChild(option);
+            });
+
+            if (internetPlanEl.querySelector(`option[value="${currentInternetPlanKey}"]`)) {
+                internetPlanEl.value = currentInternetPlanKey;
+            } else {
+                if (plansSource.find(p => p.type === "160Mbps")) internetPlanEl.value = "160Mbps";
+                else if (plansSource.find(p => p.type === "500Mbps")) internetPlanEl.value = "500Mbps";
+                else if (plansSource.length > 0) internetPlanEl.value = plansSource[0].type;
+            }
+             if (internetNotesEl) {
+                internetNotesEl.textContent = isBundle ? "참고: WiFi 공유기 무료. TV 결합 시 할인된 요금입니다." : "참고: WiFi 공유기 무료.";
+            }
+        }
+
+        function handleInternetTypeChange() {
+            const selectedType = document.querySelector('input[name="internetType"]:checked').value;
+            const isBundle = selectedType === 'bundle';
+
+            populateInternetPlansHello(isBundle);
+
+            tvPlanEl.disabled = !isBundle;
+            additionalTvPlanEl.disabled = !isBundle;
+            
+            if (!isBundle) {
+                tvPlanEl.value = 'none';
+                additionalTvPlanEl.value = 'none';
+            } else {
+                if (tvPlanEl.value === 'none' && lgHelloVisionData.tv_plans.find(p => p.key === "newbasic_uhd")) {
+                     tvPlanEl.value = 'newbasic_uhd';
+                }
+            }
+            handleTvPlanChange(); 
+        }
+        
+        function handleTvPlanChange() {
+            const isFirstTvSelected = tvPlanEl.value !== 'none';
+            const isBundleType = document.querySelector('input[name="internetType"]:checked').value === 'bundle';
+            
+            additionalTvPlanEl.disabled = !isFirstTvSelected || !isBundleType;
+            if (!isFirstTvSelected || !isBundleType) {
+                additionalTvPlanEl.value = 'none';
+            }
+        }
+        
+        function updateDiscountTypeDisplay() {
+            const mobileCarrier = mobileCarrierEl.value;
+            let discountTypeToSelect = "none";
+            if (mobileCarrier === "SK" || mobileCarrier === "KT" || mobileCarrier === "LG") {
+                discountTypeToSelect = "mno_equivalent";
+            } else if (mobileCarrier === "HelloMobile") {
+                discountTypeToSelect = "thrifty_bundle";
+            }
+            
+            discountTypeDisplayRadios.forEach(radio => {
+                radio.checked = radio.value === discountTypeToSelect;
+            });
+
+            if (bundleDetailsContainerEl && detailBundleInternetDiscountEl && detailBundleDescriptionEl) {
+                if (discountTypeToSelect !== "none") {
+                    bundleDetailsContainerEl.classList.remove('hidden');
+                    let discountAmount = 0;
+                    let description = "";
+                    const internetKey = internetPlanEl.value; 
+                    const isBundle = document.querySelector('input[name="internetType"]:checked').value === 'bundle';
+
+                    if (internetKey !== 'none') {
+                        if (discountTypeToSelect === "mno_equivalent") {
+                            const discountList = isBundle ? lgHelloVisionData.bundle_discounts.mno_equivalent_discounts.internet_tv_bundle_discounts : lgHelloVisionData.bundle_discounts.mno_equivalent_discounts.internet_standalone_discounts;
+                            const foundDiscount = discountList.find(d => d.internet_speed === internetKey);
+                            if (foundDiscount) {
+                                discountAmount = foundDiscount.discount_amount;
+                                description = `타사 모바일(${mobileCarrier}) 결합 시 예상 할인입니다. ${foundDiscount.condition || ""}`;
+                            }
+                        } else if (discountTypeToSelect === "thrifty_bundle") {
+                            discountAmount = lgHelloVisionData.bundle_discounts.thrifty_bundle_discount.discount_amount;
+                            description = lgHelloVisionData.bundle_discounts.thrifty_bundle_discount.description || "헬로모바일 결합 시 적용되는 할인입니다.";
+                        }
+                    }
+                    detailBundleInternetDiscountEl.textContent = discountAmount.toLocaleString();
+                    detailBundleDescriptionEl.textContent = description;
+
+                } else {
+                    bundleDetailsContainerEl.classList.add('hidden');
+                }
+            }
+        }
+
+
+        function initializeCalculator() {
+            assignDOMElements();
+
+            if (internetTypeRadios) {
+                internetTypeRadios.forEach(radio => radio.addEventListener('change', handleInternetTypeChange));
+            }
+            if (mobileCarrierEl) {
+                 mobileCarrierEl.addEventListener('change', updateDiscountTypeDisplay);
+            }
+            
+            populateSelectWithOptionsGeneric(tvPlanEl, lgHelloVisionData.tv_plans, "newbasic_uhd", "plan_name", "monthly_fee", "key");
+            populateSelectWithOptionsGeneric(additionalTvPlanEl, lgHelloVisionData.additional_tv_fees, "none", "description", "monthly_fee", "key");
+            
+            if (tvPlanEl) {
+                tvPlanEl.addEventListener('change', handleTvPlanChange); 
+            }
+            
+            handleInternetTypeChange(); 
+            updateDiscountTypeDisplay(); 
+
+            if(calculateButton) {
+                calculateButton.addEventListener('click', calculateAndDisplayResultsLGU);
+            }
+        }
+        
+        function getInternetPlanInfoHello(internetKey, isBundleInternetType) {
+            if (!internetKey || internetKey === "none") return { description: "미선택", monthly_fee: 0, speed: "0Mbps", type: "none" };
+            const dataSource = isBundleInternetType ? lgHelloVisionData.internet_plans.when_bundled_with_tv : lgHelloVisionData.internet_plans.standalone;
+            const plan = dataSource.find(p => p.type === internetKey);
+            return plan ? { ...plan } : { description: "오류", monthly_fee: 0, speed: "0Mbps", type: "none" };
+        }
+        
+        function getHelloVisionDiscount(internetTypeKey, mobileCarrierValue, isBundleInternetType) {
+            if (mobileCarrierValue === "none" || !internetTypeKey || internetTypeKey === "none") return 0;
+
+            let discountAmount = 0;
+            if (mobileCarrierValue === "SK" || mobileCarrierValue === "KT" || mobileCarrierValue === "LG") {
+                const discountList = isBundleInternetType ? 
+                                     lgHelloVisionData.bundle_discounts.mno_equivalent_discounts.internet_tv_bundle_discounts : 
+                                     lgHelloVisionData.bundle_discounts.mno_equivalent_discounts.internet_standalone_discounts;
+                const foundDiscount = discountList.find(d => d.internet_speed === internetTypeKey);
+                if (foundDiscount) {
+                    if (isBundleInternetType && internetTypeKey === "100Mbps" && foundDiscount.condition) {
+                        const selectedTvKey = tvPlanEl.value;
+                        const selectedTvPlan = lgHelloVisionData.tv_plans.find(p => p.key === selectedTvKey);
+                        if (selectedTvPlan && (selectedTvPlan.plan_name.includes("프로라이트") || selectedTvPlan.plan_name.includes("프로맥스"))) {
+                            return 0; 
+                        }
+                    }
+                    discountAmount = foundDiscount.discount_amount;
+                }
+            } else if (mobileCarrierValue === "HelloMobile") {
+                discountAmount = lgHelloVisionData.bundle_discounts.thrifty_bundle_discount.discount_amount;
+            }
+            return discountAmount;
+        }
+
+        function calculateAndDisplayResultsLGU() {
+            try {
+                const selectedInternetTypeValue = document.querySelector('input[name="internetType"]:checked').value;
+                const isBundleInternetType = selectedInternetTypeValue === 'bundle';
+
+                const internetKey = internetPlanEl.value; 
+                const tvKey = isBundleInternetType ? tvPlanEl.value : 'none'; 
+                const additionalTvKey = isBundleInternetType ? additionalTvPlanEl.value : 'none';
+                const mobileCarrierValue = mobileCarrierEl.value;
+                const installationTime = document.querySelector('input[name="installationTime"]:checked').value;
+                
+                let currentInternetDetails = getInternetPlanInfoHello(internetKey, isBundleInternetType);
+                let internetBasePrice = currentInternetDetails.monthly_fee || 0; 
+                let calculatedInternetDiscount = 0; 
+                
+                if (internetKey !== 'none' && mobileCarrierValue !== "none") {
+                    calculatedInternetDiscount = getHelloVisionDiscount(internetKey, mobileCarrierValue, isBundleInternetType);
+                }
+                
+                updateDiscountTypeDisplay(); 
+                
+                let totalActualInternetDiscount = calculatedInternetDiscount;
+                totalActualInternetDiscount = Math.min(totalActualInternetDiscount, internetBasePrice); 
+                
+                const finalInternetComponentCost = internetBasePrice - totalActualInternetDiscount;
+                
+                let tvBase = 0;
+                if (isBundleInternetType && tvKey !== 'none' && lgHelloVisionData.tv_plans.find(p=>p.key === tvKey)) {
+                    tvBase = lgHelloVisionData.tv_plans.find(p=>p.key === tvKey).monthly_fee;
+                }
+                const finalTvComponentCost = tvBase;
+                
+                let finalAdditionalTvCost = 0;
+                if (isBundleInternetType && additionalTvKey !== 'none' && lgHelloVisionData.additional_tv_fees.find(p=>p.key === additionalTvKey)) {
+                     finalAdditionalTvCost = lgHelloVisionData.additional_tv_fees.find(p=>p.key === additionalTvKey).monthly_fee;
+                }
+
+                const finalPhoneComponentCost = 0; 
+                
+                const finalMonthlyDisplayCost = finalInternetComponentCost + finalTvComponentCost + finalAdditionalTvCost + finalPhoneComponentCost;
+                const totalPreDiscountMonthlyFee = internetBasePrice + finalTvComponentCost + finalAdditionalTvCost + finalPhoneComponentCost;
+
+                if(totalBaseInternetCostEl) totalBaseInternetCostEl.textContent = internetBasePrice.toLocaleString();
+                if(totalInternetDiscountAmountEl) totalInternetDiscountAmountEl.textContent = totalActualInternetDiscount.toLocaleString();
+
+                if (isBundleInternetType && tvKey !== 'none') {
+                    if(tvCostSummaryContainerEl) tvCostSummaryContainerEl.classList.remove('hidden');
+                    if(tvBaseCostDisplayEl) tvBaseCostDisplayEl.textContent = tvBase.toLocaleString();
+                } else {
+                    if(tvCostSummaryContainerEl) tvCostSummaryContainerEl.classList.add('hidden');
+                }
+                
+                if (isBundleInternetType && additionalTvKey !== 'none') {
+                    if(additionalTvCostSummaryContainerEl) additionalTvCostSummaryContainerEl.classList.remove('hidden');
+                    if(additionalTvCostDisplayEl) additionalTvCostDisplayEl.textContent = finalAdditionalTvCost.toLocaleString();
+                } else {
+                    if(additionalTvCostSummaryContainerEl) additionalTvCostSummaryContainerEl.classList.add('hidden');
+                }
+                
+                if(finalMonthlyCostEl) finalMonthlyCostEl.textContent = finalMonthlyDisplayCost.toLocaleString();
+
+                let calculatedInstallationFee = 0;
+                const installKeyToLookup = determineHelloVisionInstallationKey(internetKey !== 'none', isBundleInternetType && tvKey !== 'none', isBundleInternetType && additionalTvKey !== 'none'); 
+                
+                const feeEntry = lgHelloVisionData["installation_fees"].find(fee => fee.key === installKeyToLookup);
+
+                if(feeEntry){
+                     calculatedInstallationFee = installationTime === 'weekend' ? (feeEntry.fee * 1.25) : feeEntry.fee; 
+                } else { 
+                    if (internetKey !== 'none' && isBundleInternetType && tvKey !== 'none') {
+                        const fallbackFee = lgHelloVisionData["installation_fees"].find(f => f.key === "internet_with_tv");
+                        if(fallbackFee) calculatedInstallationFee = installationTime === 'weekend' ? (fallbackFee.fee * 1.25) : fallbackFee.fee;
+                    } else if (internetKey !== 'none') {
+                        const fallbackFee = lgHelloVisionData["installation_fees"].find(f => f.key === "internet_only");
+                         if(fallbackFee) calculatedInstallationFee = installationTime === 'weekend' ? (fallbackFee.fee * 1.25) : fallbackFee.fee;
+                    }
+                }
+                
+                if(selectedInternetEl) selectedInternetEl.textContent = currentInternetDetails.description;
+                const tvPlanObj = isBundleInternetType && tvKey !== 'none' ? lgHelloVisionData.tv_plans.find(p=>p.key === tvKey) : null;
+                if(selectedTvEl) selectedTvEl.textContent = tvPlanObj ? tvPlanObj.plan_name : '미선택';
+                
+                const addTvPlanObj = isBundleInternetType && additionalTvKey !== 'none' ? lgHelloVisionData.additional_tv_fees.find(p=>p.key === additionalTvKey) : null;
+                if(selectedAdditionalTvEl) selectedAdditionalTvEl.textContent = addTvPlanObj ? addTvPlanObj.description : '미선택';
+                
+                const mobileCarrierText = mobileCarrierEl.options[mobileCarrierEl.selectedIndex].text;
+                if(selectedMobileCarrierDisplayEl) selectedMobileCarrierDisplayEl.textContent = mobileCarrierText;
+                
+                const discountTypeDisplayMap = {
+                    none: "결합할인 없음",
+                    mno_equivalent: "타사 모바일 결합",
+                    thrifty_bundle: "알뜰폰 결합"
+                };
+                const currentDiscountTypeKey = document.querySelector('input[name="discountTypeDisplay"]:checked')?.value || "none";
+                if(selectedDiscountTypeEl) selectedDiscountTypeEl.textContent = discountTypeDisplayMap[currentDiscountTypeKey];
+                if(installationCostResultEl) installationCostResultEl.textContent = Math.round(calculatedInstallationFee).toLocaleString();
+
+                let giftCashAmount = 0;
+                if (internetKey !== 'none') {
+                    const giftConditionType = isBundleInternetType ? "인터넷 + TV 결합" : "인터넷 단독";
+                    const currentInternetSpeed = currentInternetDetails.speed; 
+                    
+                    let foundGift = null;
+                    if (giftConditionType === "인터넷 단독") {
+                        foundGift = lgHelloVisionData.promotional_gifts.find(g => 
+                            g.condition_type === giftConditionType && g.internet_speed === currentInternetSpeed
+                        );
+                    } else { 
+                        const selectedTvPlanName = tvPlanObj ? tvPlanObj.plan_name : "";
+                        foundGift = lgHelloVisionData.promotional_gifts.find(g => 
+                            g.condition_type === giftConditionType && 
+                            g.internet_speed === currentInternetSpeed &&
+                            (!g.tv_plan_search_key || selectedTvPlanName.includes(g.tv_plan_search_key))
+                        );
+                         if (!foundGift) { 
+                            foundGift = lgHelloVisionData.promotional_gifts.find(g =>
+                               g.condition_type === giftConditionType && g.internet_speed === currentInternetSpeed
+                            );
+                         }
+                    }
+                    if (foundGift) {
+                        giftCashAmount = foundGift.gift_value;
+                    }
+                }
+                if(giftCashEl) giftCashEl.textContent = giftCashAmount.toLocaleString();
+                
+                if(resultSection) resultSection.classList.remove('hidden');
+                if(messageScriptSectionEl) messageScriptSectionEl.classList.remove('hidden');
+                generateMessageScriptsHelloVision(totalPreDiscountMonthlyFee, mobileCarrierValue === "none");
+            } catch (error) {
+                console.error("계산 중 오류 발생:", error);
+                if(resultSection) resultSection.classList.remove('hidden');
+                if(finalMonthlyCostEl) finalMonthlyCostEl.textContent = "계산 오류";
+            }
+        }
+
+        function generateMessageScriptsHelloVision(preDiscountFee, noBundleSelected) { 
+            const selectedInternetTypeValue = document.querySelector('input[name="internetType"]:checked').value;
+            const isBundleInternetType = selectedInternetTypeValue === 'bundle';
+
+            const internetKey = internetPlanEl.value;
+            const tvKey = isBundleInternetType ? tvPlanEl.value : 'none';
+            const additionalTvKey = isBundleInternetType ? additionalTvPlanEl.value : 'none';
+
+            const internetPlanInfo = getInternetPlanInfoHello(internetKey, isBundleInternetType);
+            const internetPlanText = internetPlanInfo.description !== "미선택" ? internetPlanInfo.description : "인터넷 미선택";
+            
+            let firstTvText = "헬로tv 미선택";
+            if (isBundleInternetType && tvKey !== 'none' && lgHelloVisionData.tv_plans.find(p=>p.key === tvKey)) {
+                firstTvText = lgHelloVisionData.tv_plans.find(p=>p.key === tvKey).plan_name;
+            }
+            
+            const additionalTvObj = (isBundleInternetType && additionalTvKey !== 'none' && lgHelloVisionData.additional_tv_fees.find(p=>p.key === additionalTvKey));
+            const additionalTvName = additionalTvObj ? additionalTvObj.description : "";
+            const additionalTvTextForMsg = additionalTvObj ? `\n▶️ (추가) ${additionalTvName}` : "";
+
+            const finalCalculatedMonthlyFee = finalMonthlyCostEl.textContent; 
+            const giftAmount = giftCashEl.textContent;
+            const installFee = installationCostResultEl.textContent;
+            const installTime = document.querySelector('input[name="installationTime"]:checked').value;
+            
+            let installFeeForWeekendMessage = "";
+            const currentInstallKeyName = determineHelloVisionInstallationKey(internetKey !== 'none', isBundleInternetType && tvKey !== 'none', isBundleInternetType && additionalTvKey !== 'none');
+            const feeEntryForWeekend = lgHelloVisionData["installation_fees"].find(fee => fee.key === currentInstallKeyName);
+            if (feeEntryForWeekend && installTime === 'weekend' ) {
+                 installFeeForWeekendMessage = (feeEntryForWeekend.fee * 1.25).toLocaleString(); 
+            }
+
+
+            let productDescriptionMemo = internetPlanText;
+            if (isBundleInternetType && tvKey !== 'none') productDescriptionMemo += ` + ${firstTvText}`;
+            if (isBundleInternetType && additionalTvKey !== 'none') productDescriptionMemo += ` + (추가)${additionalTvName.split('(')[0].trim()}`;
+
+            memoScriptEl.value = `1. 상품 : ${productDescriptionMemo}
+2. 요금 : ${preDiscountFee.toLocaleString()}원 (할인 전) / ${finalCalculatedMonthlyFee}원 (최종 예상)
+3. 사은품 : 현금 ${giftAmount}원
+4. 설치비 : ${installFee}원
+5. 기타 : 이사 여부 [  ] / 희망설치일자 [    년   월   일]`;
+            
+            let productDescriptionInfo = `▶️ ${internetPlanText}`;
+            if (isBundleInternetType && tvKey !== 'none') productDescriptionInfo += `\n▶️ ${firstTvText}`;
+            productDescriptionInfo += additionalTvTextForMsg;
+
+            const bundleStatusText = noBundleSelected ? "결합(X)" : "결합(O)";
+
+            infoScriptEl.value = `[미소] LG헬로비전 상품 & 사은품 요약 안내
+안녕하세요, 미소 LG헬로비전 입니다.
+고객님께서 오늘 상담 받으신 상품 안내드립니다.
+${productDescriptionInfo}
+▶️ 월 ${finalCalculatedMonthlyFee}원 (${bundleStatusText}, 약정 조건 확인 필요)
+▶️ 현금 사은품 ${giftAmount}원
+* 혜택은 실시간으로 바뀔 수 있다는 점 안내드립니다.
+미소 드림.`;
+            
+            let productDescriptionComplete = `▶️ ${internetPlanText}`;
+            if (isBundleInternetType && tvKey !== 'none') productDescriptionComplete += `\n▶️ ${firstTvText}`;
+            productDescriptionComplete += additionalTvTextForMsg;
+
+            completeScriptEl.value = `[미소] LG헬로비전 가입 완료 안내
+안녕하세요, 고객님. 미소 LG헬로비전입니다.
+✅ 계약이 완료되었어요, 아래 내용은 계약서와 동일한 효력이 있으니 꼼꼼히 읽어주세요.
+⚠️ 약정 기간 및 조건은 가입 시 상세 내용을 반드시 확인해주세요.
+⚠️ 약정 기간 내 해지 시 위약금 (할인 반환금) 및 면제된 설치비/장비임대료 등이 반환될 수 있어요.
+✅ 가입 상품 안내
+${productDescriptionComplete}
+▶️ 월 ${finalCalculatedMonthlyFee}원 (${bundleStatusText}, 약정 조건 확인 필요)
+▶️ 설치비 ${installFee}원 첫 달 합산 청구 ${installTime === 'weekday' || !installFeeForWeekendMessage || installFeeForWeekendMessage === "0" ? '' : `(주말/야간 설치 시 ${installFeeForWeekendMessage}원)`}
+▶️ 현금 사은품 ${giftAmount}원
+✅사은품은 설치 후 7일 이내 자동으로 지급되나 평일기준 5시 이전 개통 받았다고 문자 주시면 당일입금 도움드리겠습니다.
+${installTime !== 'weekday' && installFeeForWeekendMessage && installFeeForWeekendMessage !== "0" ? `-> 주말/야간 설치비는 ${installFeeForWeekendMessage}원 이십니다.` : ''}
+미소 드림.`;
+
+            sensitiveInfoLinkScriptEl.value = `[LG헬로비전] 아래링크에 고객님의 민감정보를 입력하시면 LG헬로비전으로 고객님의 민감정보가 직접 전송됩니다
+https://miso.kr/booking/forms/secure-details?querystring=고객님 전화번호`;
+        }
+        
+        function determineHelloVisionInstallationKey(hasInternet, hasFirstTv, hasAdditionalTv) {
+            if (hasInternet) {
+                if (hasFirstTv) return "internet_with_tv"; 
+                return "internet_only";
+            } else if (hasFirstTv) { 
+                const tvOnlyInstall = lgHelloVisionData.installation_fees.find(f => f.key === "tv_only"); 
+                if(tvOnlyInstall) return "tv_only";
+                return "internet_with_tv"; 
+            }
+            return null; 
+        }
+
+
+        function copyToClipboard(elementId, feedbackElementId) {
+            const textarea = document.getElementById(elementId);
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); 
+            try {
+                document.execCommand('copy');
+                const feedbackEl = document.getElementById(feedbackElementId);
+                feedbackEl.textContent = '복사되었습니다!';
+                setTimeout(() => { feedbackEl.textContent = ''; }, 2000);
+            } catch (err) {
+                const feedbackEl = document.getElementById(feedbackElementId);
+                feedbackEl.textContent = '복사 실패';
+                 setTimeout(() => { feedbackEl.textContent = ''; }, 2000);
+            }
+            window.getSelection().removeAllRanges(); 
+        }
+        
+        document.addEventListener('DOMContentLoaded', initializeCalculator);
+
+    </script>
+</body>
+</html>

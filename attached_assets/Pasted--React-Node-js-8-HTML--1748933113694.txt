@@ -1,0 +1,343 @@
+# 고도화된 통신사 상품정보 계산기 통합 뷰어 (React + Node.js)
+
+업로드된 8개의 **이미 완성된 고도화 HTML 계산기**를 하나의 프리미엄 통합 뷰어로 구성하는 풀스택 웹 애플리케이션을 만들어주세요.
+
+## 📁 업로드된 파일 분석 결과
+
+### 🚨 중요: 원본 파일 완전 보존 및 활용
+**업로드된 8개 HTML 파일들은 이미 고도화된 완성 작품이므로 절대 수정하지 마세요!**
+- 원본 파일들을 `original/` 폴더에 **그대로** 보존
+- 각 파일의 **기존 기능과 로직을 100% 유지**
+- **React 컴포넌트로 래핑**하여 통합 뷰어에 임베드하는 방식 사용
+
+### 통신사별 고도화된 계산기 파일들 (7개)
+- **kt.html** - KT 결합 할인 계산기 (완성도 매우 높음)
+  - 8가지 할인 유형 지원 (총액결합, 프리미엄 가족/싱글, 알뜰폰, 패밀리, 따로살아도 가족결합 등)
+  - 복잡한 실시간 계산 로직 구현
+  - 상담원 특화 기능 (전산메모, 문자스크립트, 원클릭 복사)
+  - 사은품/설치비 자동 계산
+  - Tailwind CSS 기반 현대적 디자인
+- **lg.html** - LG유플러스 상품정보/계산기 (고도화 예상)
+- **sk.html** - SK브로드밴드 상품정보/계산기 (고도화 예상)
+- **lgsoho.html** - LG헬로비전 소호 상품정보/계산기 (고도화 예상)
+- **hellovision.html** - 헬로비전 상품정보/계산기 (고도화 예상)
+- **skyhcn.html** - SKY 중앙방송 상품정보/계산기 (고도화 예상)
+- **skpop.html** - SK브로드밴드 POP 상품정보/계산기 (고도화 예상)
+
+### 상담원 템플릿 파일 (1개)
+- **smile-template.html** - 상담원용 템플릿 모음집 (대용량)
+
+## 🎯 프로젝트 목표
+
+**이미 완성된 고급 계산기들을 손상 없이 통합하여 상담원들이 효율적으로 사용할 수 있는 프리미엄 업무용 대시보드** 제작
+
+## 🎨 통합 뷰어 UI/UX 디자인
+
+### 메인 레이아웃 구조
+```
+┌─────────────────────────────────────────────────────────┐
+│ 🏢 프리미엄 헤더 (통신사 통합 계산기 관리 시스템)        │
+├─────────────────────────────────────────────────────────┤
+│ 📊 스마트 네비게이션 탭 (8개 섹션)                     │
+│ [KT🔥] [LG] [SK] [LG소호] [헬로비전] [SKY] [SKPOP] [📋템플릿] │
+├─────────────────────────────────────────────────────────┤
+│ 🎛️ 통합 도구모음 [비교] [즐겨찾기] [최근] [전체화면]     │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│ 📋 메인 컨텐츠 영역 (선택된 계산기 임베드)               │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │    원본 HTML 계산기가 그대로 표시됩니다              │ │
+│ │    (기존 기능 100% 유지)                           │ │
+│ └─────────────────────────────────────────────────────┘ │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+### 프리미엄 디자인 시스템
+
+#### 색상 팔레트 (업무용 프리미엄)
+- **배경**: 
+  - 메인: `#0f1419` (다크 네이비)
+  - 카드: `#1a1f2e` (슬레이트 그레이)
+  - 통합도구: `#2d3748` (미드 그레이)
+- **통신사별 브랜드 컬러**:
+  - KT: `#e11d48` (빨강) + 🔥 아이콘
+  - LG: `#8b5cf6` (보라)
+  - SK: `#0ea5e9` (파랑)
+  - 헬로비전: `#10b981` (녹색)
+  - SKY: `#f59e0b` (주황)
+  - 템플릿: `#6366f1` (인디고) + 📋 아이콘
+- **텍스트**: 
+  - 메인: `#f8fafc` (순백)
+  - 서브: `#cbd5e1` (라이트 그레이)
+
+#### 고급 애니메이션 & 인터랙션
+- **탭 전환**: 0.3초 smooth slide + 페이드
+- **계산기 로딩**: 스켈레톤 UI + 프로그레스 바
+- **호버 효과**: 통신사 브랜드 컬러로 글로우
+- **마이크로 인터랙션**: 탭 선택 시 리플 이펙트
+
+## 🛠 React + Node.js 통합 아키텍처
+
+### Frontend (React) 구조
+```
+📁 client/
+├── public/
+│   ├── index.html
+│   └── telecom-logos/ (통신사 로고들)
+├── src/
+│   ├── components/
+│   │   ├── Layout/
+│   │   │   ├── Header.jsx (프리미엄 헤더)
+│   │   │   ├── TelecomNavigation.jsx (8개 탭 네비게이션)
+│   │   │   └── ToolBar.jsx (통합 도구모음)
+│   │   ├── TelecomCalculators/
+│   │   │   ├── KtCalculatorFrame.jsx (KT 계산기 임베드)
+│   │   │   ├── LgCalculatorFrame.jsx (LG 계산기 임베드)
+│   │   │   ├── SkCalculatorFrame.jsx (SK 계산기 임베드)
+│   │   │   ├── LgSohoCalculatorFrame.jsx
+│   │   │   ├── HellovisionCalculatorFrame.jsx
+│   │   │   ├── SkyhcnCalculatorFrame.jsx
+│   │   │   ├── SkpopCalculatorFrame.jsx
+│   │   │   └── TemplateViewer.jsx (템플릿 뷰어)
+│   │   ├── CalculatorFrame/
+│   │   │   ├── IframeContainer.jsx (안전한 iframe 래퍼)
+│   │   │   ├── LoadingOverlay.jsx (로딩 상태)
+│   │   │   └── ErrorBoundary.jsx (에러 처리)
+│   │   ├── ComparisonTools/
+│   │   │   ├── ComparisonMode.jsx (2-3개 계산기 비교)
+│   │   │   ├── ResultComparison.jsx (계산 결과 비교)
+│   │   │   └── PriceComparison.jsx (요금 비교 테이블)
+│   │   └── UserPreferences/
+│   │       ├── FavoriteManager.jsx (즐겨찾기 관리)
+│   │       ├── RecentTabs.jsx (최근 본 탭)
+│   │       └── UserSettings.jsx (사용자 설정)
+│   ├── hooks/
+│   │   ├── useTelecomCalculator.js (계산기 상태 관리)
+│   │   ├── useComparison.js (비교 기능)
+│   │   ├── useFavorites.js (즐겨찾기 로직)
+│   │   └── useRecentTabs.js (최근 탭 추적)
+│   ├── services/
+│   │   ├── calculatorApi.js (백엔드 API 호출)
+│   │   ├── comparisonService.js (비교 로직)
+│   │   └── storageService.js (로컬 스토리지 관리)
+│   ├── context/
+│   │   └── TelecomContext.jsx (전역 상태 관리)
+│   └── App.jsx (메인 앱)
+└── package.json
+```
+
+### Backend (Node.js) 구조
+```
+📁 server/
+├── routes/
+│   ├── telecom.js (계산기 파일 서빙)
+│   ├── comparison.js (비교 API)
+│   ├── templates.js (템플릿 관리)
+│   └── preferences.js (사용자 설정)
+├── middleware/
+│   ├── compression.js (응답 압축)
+│   ├── cache.js (정적 파일 캐싱)
+│   └── cors.js (CORS 설정)
+├── services/
+│   ├── calculatorService.js (계산기 로직 지원)
+│   ├── comparisonService.js (비교 계산)
+│   └── templateService.js (템플릿 처리)
+├── utils/
+│   ├── fileHandler.js (HTML 파일 처리)
+│   ├── logger.js (로깅)
+│   └── validator.js (입력 검증)
+├── original/ 📁 (업로드된 원본 파일들 - 수정 금지!)
+│   ├── kt.html
+│   ├── lg.html  
+│   ├── sk.html
+│   ├── lgsoho.html
+│   ├── hellovision.html
+│   ├── skyhcn.html
+│   ├── skpop.html
+│   └── smile-template.html
+└── server.js (메인 서버)
+```
+
+## 🚀 핵심 통합 기능 명세
+
+### 1. **스마트 계산기 임베드 시스템**
+```jsx
+// 각 계산기를 안전하게 임베드
+const CalculatorFrame = ({ telecomType }) => {
+  return (
+    <div className="calculator-container">
+      <iframe
+        src={`/api/calculator/${telecomType}`}
+        className="w-full h-full border-0"
+        sandbox="allow-scripts allow-forms allow-same-origin"
+        title={`${telecomType} 계산기`}
+      />
+    </div>
+  );
+};
+```
+
+### 2. **통신사별 브랜드 네비게이션**
+```jsx
+const telecomTabs = [
+  { id: 'kt', name: 'KT', icon: '🔥', color: '#e11d48', premium: true },
+  { id: 'lg', name: 'LG유플러스', icon: '📡', color: '#8b5cf6' },
+  { id: 'sk', name: 'SK', icon: '⚡', color: '#0ea5e9' },
+  { id: 'lgsoho', name: 'LG소호', icon: '🏢', color: '#10b981' },
+  { id: 'hellovision', name: '헬로비전', icon: '📺', color: '#ef4444' },
+  { id: 'skyhcn', name: 'SKY', icon: '🛰️', color: '#f59e0b' },
+  { id: 'skpop', name: 'SKPOP', icon: '🚀', color: '#06b6d4' },
+  { id: 'template', name: '템플릿', icon: '📋', color: '#6366f1' }
+];
+```
+
+### 3. **통합 비교 도구**
+```jsx
+// 2-3개 계산기 동시 비교
+const ComparisonMode = () => {
+  const [selectedCalculators, setSelectedCalculators] = useState([]);
+  
+  return (
+    <div className="comparison-grid">
+      {selectedCalculators.map(calc => (
+        <CalculatorFrame key={calc} telecomType={calc} />
+      ))}
+    </div>
+  );
+};
+```
+
+### 4. **상담원 특화 업무 도구**
+- **즐겨찾기**: 자주 사용하는 통신사/템플릿 북마크
+- **최근 본 탭**: 마지막 5개 탭 기록 및 빠른 접근
+- **전체화면 모드**: 계산기 전용 화면 (F11 토글)
+- **결과 비교**: 여러 통신사 계산 결과를 테이블로 비교
+- **템플릿 관리**: smile-template 내용을 카테고리별 정리
+
+### 5. **고급 성능 최적화**
+```javascript
+// 계산기별 지연 로딩
+const useLazyCalculator = (telecomType) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  useEffect(() => {
+    if (activeTab === telecomType && !isLoaded) {
+      loadCalculator(telecomType);
+      setIsLoaded(true);
+    }
+  }, [activeTab, telecomType, isLoaded]);
+};
+```
+
+## 🛡 원본 파일 보호 및 활용 전략
+
+### 필수 준수사항
+1. **원본 완전 보존**: 업로드된 8개 HTML 파일을 `original/` 폴더에 **원본 그대로** 보관
+2. **수정 절대 금지**: 파일 이름, 내용, 구조, 스타일을 **절대 변경하지 말 것**
+3. **기능 100% 유지**: 기존 계산 로직, 상담원 도구, 사은품 계산 등 모든 기능 그대로 유지
+4. **임베드 방식 사용**: iframe 또는 안전한 컨테이너로 래핑만 함
+
+### API에서 원본 파일 서빙
+```javascript
+// 올바른 방법: 원본 파일을 그대로 서빙
+app.get('/api/calculator/:telecom', (req, res) => {
+  const filePath = `./original/${req.params.telecom}.html`;
+  res.sendFile(path.resolve(filePath)); // 원본 그대로 전송
+});
+
+// 잘못된 방법: 원본 파일 수정 (절대 금지!)
+// 원본 파일은 읽기 전용으로만 사용! ❌
+```
+
+## 📱 반응형 성능 최적화
+
+### Desktop (1200px+)
+- 풀 레이아웃 + 비교 모드 + 사이드 도구
+- 멀티 탭 동시 표시 가능
+
+### Tablet (768px-1199px)  
+- 탭 스크롤 + 메인 계산기
+- 터치 최적화된 네비게이션
+
+### Mobile (320px-767px)
+- 드롭다운 네비게이션
+- 한 번에 하나의 계산기만 표시
+- 모바일 전용 간소화된 도구모음
+
+## 🎯 상담원 업무 효율성 기능
+
+### 즐겨찾기 시스템
+```jsx
+const useFavorites = () => {
+  const [favorites, setFavorites] = useState([]);
+  
+  const addFavorite = (telecomType) => {
+    // 자주 사용하는 계산기 북마크
+  };
+};
+```
+
+### 최근 사용 추적
+```jsx
+const useRecentTabs = () => {
+  const [recentTabs, setRecentTabs] = useState([]);
+  
+  const trackTabUsage = (telecomType) => {
+    // 사용 패턴 추적 및 빠른 접근 제공
+  };
+};
+```
+
+### 통합 비교 도구
+- **요금 비교**: 여러 통신사 계산 결과를 한 눈에 비교
+- **혜택 비교**: 사은품, 할인 혜택 비교 테이블
+- **고객 맞춤 추천**: 조건에 따른 최적 통신사 추천
+
+## 💼 템플릿 관리 시스템 (smile-template.html)
+
+### 스마트 템플릿 뷰어
+- **카테고리별 정리**: 템플릿을 용도별로 자동 그룹핑
+- **검색 기능**: 키워드로 템플릿 빠른 검색
+- **원클릭 복사**: 템플릿 텍스트를 클립보드에 바로 복사
+- **개인화**: 자주 쓰는 템플릿을 상단에 고정
+- **사용 통계**: 어떤 템플릿을 가장 많이 사용했는지 추적
+
+## 🏆 완성도 목표
+
+**실제 통신사 상담센터에서 8개의 고도화된 계산기를 효율적으로 사용할 수 있는 프리미엄 통합 워크스페이스**
+
+### 품질 기준
+- **원본 보존**: 기존 계산기 기능 100% 유지
+- **사용성**: 탭 전환 1초 이내, 직관적 인터페이스
+- **안정성**: 24시간 연속 운영 가능한 메모리 관리
+- **확장성**: 새로운 통신사 계산기 추가 용이
+- **접근성**: WCAG 2.1 AA 준수
+
+### 핵심 가치 제안
+1. **기존 자산 활용**: 이미 완성된 고급 계산기들의 가치 최대화
+2. **업무 효율성**: 8개 계산기를 하나의 인터페이스에서 관리
+3. **비교 분석**: 통신사별 조건을 쉽게 비교
+4. **상담 품질**: 빠른 정보 접근으로 고객 상담 품질 향상
+
+## 🚀 개발 우선순위
+
+### Phase 1: 기본 통합 (필수)
+1. React + Node.js 기본 구조 설정
+2. 8개 HTML 파일을 안전하게 임베드하는 시스템 구축
+3. 기본 탭 네비게이션 구현 (브랜드 컬러 적용)
+4. 원본 파일 서빙 API 구현
+
+### Phase 2: 고급 기능 (핵심)
+1. 통합 비교 도구 구현
+2. 즐겨찾기 및 최근 탭 시스템
+3. 템플릿 관리 시스템 구축
+4. 반응형 디자인 완성
+
+### Phase 3: 최적화 & 사용성 (프리미엄)
+1. 고급 애니메이션 및 마이크로 인터랙션
+2. 성능 모니터링 및 최적화
+3. 사용자 설정 및 개인화 기능
+4. 접근성 및 키보드 단축키 지원
+
+이 명세서를 바탕으로 **이미 완성된 고급 계산기들을 손상 없이 통합하여 상담원들의 업무 효율을 극대화하는 프리미엄 통합 워크스페이스**를 제작해주세요!
