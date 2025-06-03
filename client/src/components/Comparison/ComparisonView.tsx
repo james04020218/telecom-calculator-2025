@@ -109,7 +109,7 @@ export default function ComparisonView() {
             비교할 계산기를 선택해주세요
           </h3>
           <p className="text-gray-500">
-            위의 드롭다운에서 비교하고 싶은 통신사 계산기를 선택하세요.
+            위의 드롭다운에서 비교하고 싶은 통신사 계산기를 선택하세요. (최대 4개)
           </p>
         </div>
       )}

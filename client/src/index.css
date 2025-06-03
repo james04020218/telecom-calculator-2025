@@ -105,8 +105,23 @@
 
   .comparison-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 1rem;
+    max-width: 100%;
+  }
+  
+  /* 4 calculators: 2x2 grid on large screens */
+  @media (min-width: 1400px) {
+    .comparison-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  /* 3 calculators: responsive layout */
+  @media (min-width: 1200px) and (max-width: 1399px) {
+    .comparison-grid {
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    }
   }
 
   .floating-toolbar {

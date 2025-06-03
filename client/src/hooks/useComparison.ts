@@ -4,7 +4,7 @@ export function useComparison() {
   const [selectedCalculators, setSelectedCalculators] = useState<string[]>([]);
 
   const addCalculator = (calculatorId: string) => {
-    if (!selectedCalculators.includes(calculatorId) && selectedCalculators.length < 3) {
+    if (!selectedCalculators.includes(calculatorId) && selectedCalculators.length < 4) {
       setSelectedCalculators([...selectedCalculators, calculatorId]);
     }
   };
