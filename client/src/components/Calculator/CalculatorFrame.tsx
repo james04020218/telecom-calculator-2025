@@ -10,12 +10,16 @@ interface CalculatorFrameProps {
 export default function CalculatorFrame({ telecomType, isLoading }: CalculatorFrameProps) {
   const [, setLocation] = useLocation();
   const [isNavigating, setIsNavigating] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const openCalculator = () => {
     setIsNavigating(true);
+    setIsTransitioning(true);
+    
+    // Smooth fade out animation
     setTimeout(() => {
       setLocation(`/calculator/${telecomType}`);
-    }, 300);
+    }, 600);
   };
 
   const openInNewWindow = () => {
@@ -58,10 +62,10 @@ export default function CalculatorFrame({ telecomType, isLoading }: CalculatorFr
   };
 
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-lg overflow-hidden">
+    <div className={`relative w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-lg overflow-hidden transition-all duration-700 ease-in-out ${isTransitioning ? 'opacity-0 scale-95 blur-sm' : 'opacity-100 scale-100 blur-0'}`}>
       <div className="flex flex-col items-center justify-center h-full p-8 text-center">
         {/* Icon */}
-        <div className={`w-24 h-24 rounded-full bg-gradient-to-br ${getTelecomColor(telecomType)} flex items-center justify-center mb-6 shadow-lg`}>
+        <div className={`w-24 h-24 rounded-full bg-gradient-to-br ${getTelecomColor(telecomType)} flex items-center justify-center mb-6 shadow-lg transform transition-all duration-500 hover:scale-110 hover:rotate-3 hover:shadow-2xl ${isNavigating ? 'animate-pulse scale-110 shadow-2xl' : ''}`}>
           <Calculator className="w-12 h-12 text-white" />
         </div>
         
@@ -81,13 +85,17 @@ export default function CalculatorFrame({ telecomType, isLoading }: CalculatorFr
           onClick={openCalculator}
           disabled={isNavigating}
           className={`
-            inline-flex items-center gap-3 px-8 py-4 
+            relative inline-flex items-center gap-3 px-8 py-4 
             bg-gradient-to-r ${getTelecomColor(telecomType)} 
             text-white font-semibold rounded-xl 
-            hover:shadow-lg transform hover:scale-105 
-            transition-all duration-200 
+            hover:shadow-xl transform hover:scale-105 
+            transition-all duration-300 ease-out
             disabled:opacity-50 disabled:cursor-not-allowed
             disabled:transform-none disabled:shadow-none
+            overflow-hidden ripple-effect
+            ${isNavigating ? 'animate-pulse scale-105 shadow-2xl' : ''}
+            before:absolute before:inset-0 before:bg-white before:opacity-0 
+            hover:before:opacity-20 before:transition-opacity before:duration-300
           `}
         >
           {isNavigating ? (
